@@ -2,6 +2,16 @@
     font-family: 'Epunda Slab', sans-serif;
 }
 
-.body {
-    font-family: 'Epunda Slab', sans-serif;
+.headersOfPages {
+    font-family: 'Tangerine', sans-serif;
+}
+
+.carousel-item {
+  height: 400px;       /* the preferred height */
+}
+
+.carousel-item img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
