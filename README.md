@@ -12,3 +12,4 @@ Check the website [here](https://alvarogalloc.github.io/km-de-vida/)
   + mock data because we lack a db
   + generate auxiliary classes for our colour palette
   + apply consistency of style to other components
+  + creating layouts using bootstrap for contact page + volunteer forms
