@@ -11,7 +11,7 @@
     />
     <title>Kilometros de Vida</title>
 
-    <link rel="icon" href="images/logo.svg" sizes="any" type="image/svg+xml">
+    <link rel="icon" href="images/logo.svg" sizes="any" type="image/svg+xml" />
     <link rel="stylesheet" href="./CSS/styles.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,7 +23,7 @@
   </head>
 
   <body class="d-flex flex-column h-100">
-    <nav id="navbar" class="navbar navbar-expand-lg  navbarcss">
+    <nav id="navbar" class="navbar navbar-expand-lg navbarcss">
       <a class="navbar-brand" href="index.html">Kilometros de Vida</a>
       <button
         class="navbar-toggler"
@@ -64,8 +64,18 @@
               Link to SDGs
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="https://sdgs.un.org/goals/goal2" target="_blank">SDG #2</a>
-              <a class="dropdown-item" href="https://sdgs.un.org/goals/goal12" target ="_blank">SDG #12</a>
+              <a
+                class="dropdown-item"
+                href="https://sdgs.un.org/goals/goal2"
+                target="_blank"
+                >SDG #2</a
+              >
+              <a
+                class="dropdown-item"
+                href="https://sdgs.un.org/goals/goal12"
+                target="_blank"
+                >SDG #12</a
+              >
             </div>
           </li>
         </ul>
@@ -80,22 +90,132 @@
       </div>
     </header>
     <main class="container mb-5">
-      <!--Forms for Volunteering-->
+      <!-- Student Volunteer Form -->
+      <h2 class="mb-4">Volunteer to Drive Food</h2>
       <form>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
+        <div class="form-group mb-3">
+          <label for="volunteerName">Full Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="volunteerName"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="volunteerEmail">Email Address</label>
           <input
             type="email"
             class="form-control"
-            id="exampleInputEmail1"
+            id="volunteerEmail"
             aria-describedby="emailHelp"
-            placeholder="Enter email"
+            placeholder="Enter your email"
+            required
           />
-          <small id="emailHelp" class="form-text text-muted"
-            >This data is used only for important contact, no spam.</small
-          >
+          <small id="emailHelp" class="form-text text-muted">
+            We’ll only use this to contact you about volunteering.
+          </small>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+
+        <div class="form-group mb-3">
+          <label for="volunteerPhone">Phone Number</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="volunteerPhone"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="availability">Availability</label>
+          <select class="form-control" id="availability" required>
+            <option value="" disabled selected>Select your availability</option>
+            <option>Weekdays</option>
+            <option>Weekends</option>
+            <option>Evenings</option>
+            <option>Flexible</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn bg-vanilla">Sign Up</button>
+      </form>
+
+      <hr class="my-5" />
+
+      <!-- Restaurant/Hotel Donation Form -->
+      <h2 class="mb-4">Donate Surplus Food</h2>
+      <form>
+        <div class="form-group mb-3">
+          <label for="orgName">Restaurant/Hotel Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="orgName"
+            placeholder="Enter your business name"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="contactPerson">Contact Person</label>
+          <input
+            type="text"
+            class="form-control"
+            id="contactPerson"
+            placeholder="Enter contact person's name"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="donorEmail">Email Address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="donorEmail"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="donorPhone">Phone Number</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="donorPhone"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="foodType">Type of Food Surplus</label>
+          <textarea
+            class="form-control"
+            id="foodType"
+            rows="3"
+            placeholder="E.g., bread, fruits, packaged meals..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="pickupTime">Preferred Pickup Time</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pickupTime"
+            placeholder="E.g., after 8 PM, mornings, flexible..."
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn bg-vanilla">Offer Donation</button>
       </form>
     </main>
 
@@ -133,4 +253,3 @@
     ></script>
   </body>
 </html>
-
