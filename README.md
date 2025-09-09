@@ -5,3 +5,10 @@ Daniela Terán Martija
 
 
 Check the website [here](https://alvarogalloc.github.io/km-de-vida/)
+
+# Ai report
+
+- used chatGPT and copilot for the following tasks:
+  + mock data because we lack a db
+  + generate auxiliary classes for our colour palette
+  + apply consistency of style to other components
