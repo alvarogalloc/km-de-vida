@@ -1,17 +1,41 @@
+:root {
+  --nyanza: #eaf4d3;
+  --vanilla: #dbd8ae;
+  --rosy-brown: #ca907e;
+  --chestnut: #994636;
+  --golden-brown: #895b1e;
+}
+
 .navbarcss {
-    font-family: 'Epunda Slab', sans-serif;
+  font-family: "Epunda Slab", sans-serif;
 }
 
 .headersOfPages {
-    font-family: 'Tangerine', sans-serif;
+  font-family: "Tangerine", sans-serif;
 }
 
 .carousel-item {
-  height: 400px;       /* the preferred height */
+  height: 400px; /* the preferred height */
 }
 
 .carousel-item img {
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+#navbar {
+  background-color: var(--chestnut);
+}
+
+
+nav a {
+  color: var(--vanilla);
+}
+
+a:hover {
+  color: var(--nyanza);
+}
+
+#bottom-bar {
+  background-color: var(--chestnut);
 }
