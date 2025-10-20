@@ -28,5 +28,5 @@ app.post('/join/giver', (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Pokedex running at port ${port}`)
+  console.log(`Kilometros de Vida running at port ${port}`)
 })
