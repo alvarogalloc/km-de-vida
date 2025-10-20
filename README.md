@@ -14,4 +14,9 @@ Check the website [here](https://alvarogalloc.github.io/km-de-vida/)
   + apply consistency of style to other components
   + creating layouts using bootstrap for contact page + volunteer forms
 
->>>>>>> f52c67555a534d0a0e4f04a6b0b5150e24185923
+
+# how to run
+- run `npm i ` to install dependencies
+- run `npm run start ` to start server
+- run `npm run dev ` to start server with hot-reload
+
