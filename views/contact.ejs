@@ -1,0 +1,109 @@
+<%- include('partial/header', { currentPage: 'home', title: 'Contact Us | Kilometros de Vida' }) %>
+
+<header class="headersOfPages text-center my-4">
+    <h1>Kilómetros de Vida - Contact</h1>
+</header>
+
+<body class="d-flex flex-column h-100">
+    <nav id="navbar" class="navbar navbar-expand-lg  navbarcss">
+      <a class="navbar-brand" href="index.html">Kilometros de Vida</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="volunteer.html">Volunteer</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Link to SDGs
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="https://sdgs.un.org/goals/goal2" target="_blank">SDG #2</a>
+              <a class="dropdown-item" href="https://sdgs.un.org/goals/goal12" target ="_blank">SDG #12</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!--Want to make a color with like the main logo and quote-->
+    <header class="headersOfPages text-center my-4">
+      <h1>Kilómetros de Vida</h1>
+      <div class="quote">Alimentando esperanza, una entrega a la vez.</div>
+    </header>
+
+    <!--Contact Info-->
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">Get in Touch</h3>
+                <p class="text-center text-muted mb-4">
+                    Have food to donate? Want to volunteer with us? Reach out anytime!
+                </p>
+                
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center mb-3 mb-md-0">
+                    <i class="bi bi-envelope-fill text-danger me-2 fs-5"></i>
+                    <span>contact@kdevida.org</span>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-telephone-fill text-danger me-2 fs-5"></i>
+                    <span>+52 33 1234 5678</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center mb-3 mb-md-0">
+                    <i class="bi bi-geo-alt-fill text-danger me-2 fs-5"></i>
+                    <span>Guadalajara, Jalisco</span>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-facebook text-primary me-2 fs-5"></i>
+                    <a href="#" class="text-decoration-none">/FoodRescueGDL</a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="mailto:contact@foodrescuegdl.org" class="btn btn-danger btn-lg rounded-pill px-4">
+                    Contact Us
+                    </a>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </main>
+
+<%- include('partial/bottom') %>
+
+
