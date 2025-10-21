@@ -131,5 +131,5 @@ app.post('/join/driver', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`App running at port ${port}`)
+  console.log(`Kilometros de Vida running at port ${port}`)
 })
