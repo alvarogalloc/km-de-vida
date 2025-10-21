@@ -54,6 +54,8 @@ body {
 
 .navbarcss {
   font-family: "Epunda Slab", sans-serif;
+  color: var(--bg-light);
+
 }
 
 .headersOfPages {
@@ -96,7 +98,7 @@ a:hover {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 30%;
 }
 
 .carousel-fade .carousel-inner .active {
@@ -106,18 +108,17 @@ a:hover {
 }
 
 .carousel-item {
-  height: 480px; /* the preferred height */
+  max-height: 650px; /* the preferred height */
   transition: opacity 3.5s ease-in-out; /* new addition */
 }
 
 /* Smooth zoom-in effect */
 .carousel-item img {
   width: 100%;
-  height: 100%;
+  height: 30%;
   object-fit: cover;
   filter: brightness(0.85); /* new addition */
-  transform: scale(1);
-  transition: transform 7s ease-in-out, opacity 1.5s ease-in-out;
+  transition: transform 3s ease-in-out, opacity 1.5s ease-in-out;
 }
 
 /* Animate zoom when active */
