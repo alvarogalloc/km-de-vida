@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Prototype Kilometros de Vida Regina Beltrán López Álvaro Gallo Cruz Daniela Terán Martija",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
@@ -20,8 +21,11 @@
   },
   "homepage": "https://github.com/alvarogalloc/km-de-vida#readme",
   "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "mongodb": "^6.20.0",
     "nodemon": "^3.1.10"
   }
 }
