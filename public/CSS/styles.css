@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Orbitron:wght@400..900&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Tangerine:wght@400;700&display=swap');
+
 :root {
   --nyanza: #eaf4d3;
   --vanilla: #dbcdae;
@@ -59,7 +61,7 @@ body {
 }
 
 .headersOfPages {
-  font-family: "Papyrus", sans-serif;
+  font-family: "Playwrite GB J", cursive;
 }
 
 #navbar {
