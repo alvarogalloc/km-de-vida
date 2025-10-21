@@ -78,49 +78,77 @@
     </div>
 
 
-    <!--Volunteer Info-->
-    <main class="container mb-5">
-      <div class="container-fluid mt-4">
-        <!-- Header Row -->
-        <div class="row font-weight-bold border-bottom py-2">
-          <div class="col">Name</div>
-          <div class="col">Pick-Up Hours</div>
-          <div class="col">Location</div>
-          <div class="col">Notes</div>
-        </div>
+  
+<main class="container mb-5 mt-4">
 
-        <!-- Row 1 -->
-        <div class="row py-2 border-bottom">
-          <div class="col">Hotel Guadalajara Plaza</div>
-          <div class="col">10:00 AM – 12:00 PM</div>
-          <div class="col">Av. López Mateos Sur 2077</div>
-          <div class="col">Bread & pastries available daily</div>
-        </div>
+  <!-- 🧍‍♀️ Drivers Table -->
+  <section class="mb-5">
+    <h2 class="text-center mb-3">Volunteer Drivers</h2>
+    <div class="table-responsive shadow-sm rounded-lg">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="thead-dark">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Availability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (locals.drivers && drivers.length > 0) { %>
+            <% drivers.forEach(driver => { %>
+              <tr>
+                <td><%= driver.volunteerName %></td>
+                <td><%= driver.volunteerEmail %></td>
+                <td><%= driver.volunteerPhone %></td>
+                <td><%= driver.availability %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="4" class="text-center text-muted">No drivers available yet.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-        <!-- Row 2 -->
-        <div class="row py-2 border-bottom">
-          <div class="col">Restaurante El Tequila</div>
-          <div class="col">2:00 PM – 3:00 PM</div>
-          <div class="col">Calle Juárez 154, Centro</div>
-          <div class="col">Hot meals, requires containers</div>
-        </div>
+  <!-- 🍞 Food Givers Table -->
+  <section>
+    <h2 class="text-center mb-3">Food Donors</h2>
+    <div class="table-responsive shadow-sm rounded-lg">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="thead-dark">
+          <tr>
+            <th>Organization</th>
+            <th>Contact Person</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Food Type</th>
+            <th>Pickup Time</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (locals.givers && givers.length > 0) { %>
+            <% givers.forEach(giver => { %>
+              <tr>
+                <td><%= giver.orgName %></td>
+                <td><%= giver.contactPerson %></td>
+                <td><%= giver.donorEmail %></td>
+                <td><%= giver.donorPhone %></td>
+                <td><%= giver.foodType %></td>
+                <td><%= giver.pickupTime %></td>
+                <td><%= new Date(giver.createdAt).toLocaleString('es-MX') %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="7" class="text-center text-muted">No food donors available yet.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-        <!-- Row 3 -->
-        <div class="row py-2 border-bottom">
-          <div class="col">Mercado Libertad (San Juan de Dios)</div>
-          <div class="col">6:00 PM – 7:00 PM</div>
-          <div class="col">Calzada Independencia Sur</div>
-          <div class="col">Fresh produce at closing time</div>
-        </div>
-
-        <!-- Row 4 -->
-        <div class="row py-2 border-bottom">
-          <div class="col">Hotel Camino Real</div>
-          <div class="col">8:00 PM – 9:00 PM</div>
-          <div class="col">Av. Vallarta 5005</div>
-          <div class="col">Prepared meals from buffet</div>
-        </div>
-      </div>
-    </main>
+</main>
 
 <%- include('partial/bottom') %>

@@ -47,8 +47,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 
-app.get('/', (_, res) => {
-  res.render("index")
+app.get('/',async (_, res) => {
+  // get all the drivers and givers
+  const all_drivers = await drivers.find({}).toArray()
+  const all_givers = await  givers.find({}).toArray()
+  res.render("index", {drivers: all_drivers, givers: all_givers})
 })
 app.get('/about', (_, res) => {
   res.render("about")
@@ -92,7 +95,7 @@ app.post('/join/giver', async (req, res) => {
   }
 
   try {
-
+    await client.connect();
     // --- Check for duplicates ---
     const existing = await givers.findOne({ donorEmail: data.donorEmail.trim() });
     if (existing) {
@@ -155,6 +158,7 @@ app.post('/join/driver', async (req, res) => {
   }
 
   try {
+    await client.connect();
 
     // --- Check duplicates ---
     const existing = await drivers.findOne({ volunteerEmail: data.volunteerEmail.trim() });
