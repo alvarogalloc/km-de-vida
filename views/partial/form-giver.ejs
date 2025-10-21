@@ -1,5 +1,5 @@
 
-      <form>
+      <form action="/join/giver" method="post">
       <h2 class="mb-4">Donate Surplus Food</h2>
         <div class="form-group mb-3">
           <label for="orgName">Restaurant/Hotel Name</label>
@@ -7,6 +7,7 @@
             type="text"
             class="form-control"
             id="orgName"
+            name="orgName"
             placeholder="Enter your business name"
             required
           />
@@ -18,6 +19,7 @@
             type="text"
             class="form-control"
             id="contactPerson"
+            name="contactPerson"
             placeholder="Enter contact person's name"
             required
           />
@@ -29,6 +31,7 @@
             type="email"
             class="form-control"
             id="donorEmail"
+            name="donorEmail"
             placeholder="Enter your email"
             required
           />
@@ -40,6 +43,7 @@
             type="tel"
             class="form-control"
             id="donorPhone"
+            name="donorPhone"
             placeholder="Enter your phone number"
             required
           />
@@ -50,6 +54,7 @@
           <textarea
             class="form-control"
             id="foodType"
+            name="foodType"
             rows="3"
             placeholder="E.g., bread, fruits, packaged meals..."
             required
@@ -62,6 +67,7 @@
             type="text"
             class="form-control"
             id="pickupTime"
+            name="pickupTime"
             placeholder="E.g., after 8 PM, mornings, flexible..."
             required
           />

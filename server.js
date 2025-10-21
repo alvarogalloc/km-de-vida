@@ -1,5 +1,5 @@
 import express from 'express'
-import {dirname, join } from 'path'
+import { dirname, join } from 'path'
 import { config } from 'dotenv'
 import { fileURLToPath } from 'url';
 import { MongoClient, ServerApiVersion } from "mongodb"
@@ -21,20 +21,21 @@ const client = new MongoClient(db_uri,
   }
 )
 
-async function run() {
+let db;
+async function connectDB() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    db = client.db(process.env.DB_NAME);
+    console.log("✅ Connected to MongoDB");
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err);
+    process.exit(1);
   }
 }
-run().catch(console.dir);
 
+await connectDB()
+const drivers = db.collection("drivers");
+const givers = db.collection("givers");
 
 
 // workaround for modules in js
@@ -43,6 +44,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 
 app.get('/', (_, res) => {
@@ -78,57 +80,117 @@ function validate_giver(data) {
   return errors;
 }
 
-app.post('/join/giver', (req, res) => {
-  const data = req.body
+app.post('/join/giver', async (req, res) => {
+  const data = req.body;
   const errors = validate_giver(data);
-  const notification = {
-    status: "",
-    message: "",
-  }
+  const notification = { status: "", message: "" };
 
   if (errors.length > 0) {
-    // invalid things
-    notification.message = errors.join('\n')
-    notification.status = "error"
-    return res.status(422).render('volunteer', { notification })
+    notification.message = errors.join('\n');
+    notification.status = "error";
+    return res.status(422).render('volunteer', { notification });
   }
 
-  const db = load_db()
+  try {
 
-  if (db.giver.some(entry => entry.donorEmail === data.donorEmail)) {
-    // duplicates
-    notification.message = "A donor already registered with this email"
-    notification.status = "error"
-    return res.status(409).render('volunteer', {
-      notification
-    })
-  }
-  const newGiver = {
-    orgName: data.orgName.trim(),
-    contactPerson: data.contactPerson.trim(),
-    donorEmail: data.donorEmail.trim(),
-    donorPhone: data.donorPhone.trim(),
-    foodType: data.foodType.trim(),
-    pickupTime: data.pickupTime.trim(),
-    createdAt: new Date().toISOString()
-  }
-  notification.status = "success"
-  notification.message = `Thanks ${newGiver.donorEmail} for registering, we'll get in touch!`
-  db.giver.push(newGiver)
-  save_to_db(db)
-  return res.status(201).render(
-    'index',
-    {
-      notification
+    // --- Check for duplicates ---
+    const existing = await givers.findOne({ donorEmail: data.donorEmail.trim() });
+    if (existing) {
+      notification.status = "error";
+      notification.message = "A donor already registered with this email.";
+      return res.status(409).render('volunteer', { notification });
     }
-  )
 
-})
+    // --- Prepare new giver document ---
+    const newGiver = {
+      orgName: data.orgName.trim(),
+      contactPerson: data.contactPerson.trim(),
+      donorEmail: data.donorEmail.trim(),
+      donorPhone: data.donorPhone.trim(),
+      foodType: data.foodType.trim(),
+      pickupTime: data.pickupTime.trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    // --- Insert into MongoDB ---
+    await givers.insertOne(newGiver);
+
+    notification.status = "success";
+    notification.message = `Thanks ${newGiver.donorEmail}! We'll get in touch soon.`;
+
+    return res.status(201).render('index', { notification });
+
+  } catch (err) {
+    console.error("Error adding giver:", err);
+    notification.status = "error";
+    notification.message = "Something went wrong while saving your information. Please try again later.";
+    return res.status(500).render('volunteer', { notification });
+  } finally {
+    await client.close();
+  }
+});
 
 
-app.post('/join/driver', (req, res) => {
+app.post('/join/driver', async (req, res) => {
+  const data = req.body;
+  console.log(JSON.stringify(data))
+  const notification = { status: "", message: "" };
+  const errors = [];
 
-})
+  // --- Validate input ---
+  // if (!data.volunteerName || data.volunteerName.trim().length < 2)
+  //   errors.push("Full name is required and must be at least 2 characters.");
+  // if (!data.volunteerEmail || !/^[^@]+@[^@]+\.[^@]+$/.test(data.volunteerEmail))
+  //   errors.push("A valid email address is required.");
+  // if (!data.volunteerPhone || !/^\+?\d{7,15}$/.test(data.volunteerPhone))
+  //   errors.push("A valid phone number is required (7–15 digits).");
+  // if (!data.availability || data.availability.trim().length < 3)
+  //   errors.push("Please select your availability.");
+
+  if (errors.length > 0) {
+    console.log("driver error!!!")
+    notification.status = "error";
+    notification.message = errors.join('\n');
+    return res.render('volunteer', { notification });
+  }
+
+  try {
+
+    // --- Check duplicates ---
+    const existing = await drivers.findOne({ volunteerEmail: data.volunteerEmail.trim() });
+
+    if (existing) {
+      console.log("duplicate error")
+      notification.status = "error";
+      notification.message = "A volunteer is already registered with this email.";
+      return res.status(409).render('volunteer', { notification });
+    }
+
+    // --- Insert new driver ---
+    const newDriver = {
+      volunteerName: data.volunteerName.trim(),
+      volunteerEmail: data.volunteerEmail.trim(),
+      volunteerPhone: data.volunteerPhone.trim(),
+      availability: data.availability.trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    await drivers.insertOne(newDriver);
+
+    notification.status = "success";
+    notification.message = `Thanks ${newDriver.volunteerName}! You’re now registered as a volunteer driver.`;
+
+    return res.status(201).render('index', { notification });
+
+  } catch (err) {
+    console.error("Error adding driver:", err);
+    notification.status = "error";
+    notification.message = "Something went wrong while saving your information. Please try again later.";
+    return res.status(500).render('volunteer', { notification });
+  } finally {
+    await client.close();
+  }
+});
 
 app.listen(port, () => {
   console.log(`Kilometros de Vida running at port ${port}`)
