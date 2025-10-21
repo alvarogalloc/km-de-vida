@@ -14,6 +14,14 @@ Check the website [here](https://alvarogalloc.github.io/km-de-vida/)
   + apply consistency of style to other components
   + creating layouts using bootstrap for contact page + volunteer forms
 
+## second ai report
+- used for discovering bootstrap elements like the toast
+  + prompt: How to create a notification in bootstrap?ta
+  + response: dummy code and link to documentation
+- ejs migration:
+  + prompt "how would you split this .html file in  sections with .ejs to avoid code duplication?"
+  + response: plan for migrating to views and partial components with ejs
+
 
 # how to run
 - run `npm i ` to install dependencies
