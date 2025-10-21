@@ -7,8 +7,8 @@
 
     <title><%= title || 'Kilometros de Vida' %></title>
 
-    <link rel="icon" href="images/logo.svg" sizes="any" type="image/svg+xml">
-    <link rel="stylesheet" href="./CSS/styles.css" />
+    <link rel="icon" href="/images/logo.svg" sizes="any" type="image/svg+xml">
+    <link rel="stylesheet" href="/CSS/styles.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,15 +32,15 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item <%= currentPage === 'home' ? 'active' : '' %>">
+          <li class="nav-item">
             <a class="nav-link" href="/">
-              Home <% if (currentPage === 'home') { %><span class="sr-only">(current)</span><% } %>
+              Home
             </a>
           </li>
-          <li class="nav-item <%= currentPage === 'about' ? 'active' : '' %>">
+          <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
           </li>
-          <li class="nav-item <%= currentPage === 'volunteer' ? 'active' : '' %>">
+          <li class="nav-item">
             <a class="nav-link" href="/volunteer">Volunteer</a>
           </li>
           <li class="nav-item dropdown">
