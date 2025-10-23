@@ -3,8 +3,8 @@ Regina Beltrán López
 Álvaro Gallo Cruz
 Daniela Terán Martija
 
-
-Check the website [here](https://alvarogalloc.github.io/km-de-vida/)
+# deployment
+our service is currently deployed  [here](https://km-de-vida.onrender.com/)
 
 # Ai report
 
@@ -28,8 +28,6 @@ Check the website [here](https://alvarogalloc.github.io/km-de-vida/)
 - run `npm run start ` to start server
 - run `npm run dev ` to start server with hot-reload
 
-# deployment
-our service is currently deployed  [here](https://km-de-vida.onrender.com/)
 
 # To-do
 We have to remove the previously used .html files, but our deployment works and we don't want to touch it right now
