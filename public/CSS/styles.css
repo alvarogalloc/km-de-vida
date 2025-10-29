@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Orbitron:wght@400..900&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Tangerine:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Orbitron:wght@400..900&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Tangerine:wght@400;700&display=swap");
 
 :root {
   --nyanza: #eaf4d3;
@@ -54,31 +54,37 @@ body {
   background-color: var(--bg-light);
 }
 
-.navbarcss {
+.header {
   font-family: "Epunda Slab", sans-serif;
-  color: var(--bg-light);
-
+  background-color: var(--chestnut);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .headersOfPages {
   font-family: "Playwrite GB J", cursive;
 }
 
-#navbar {
-  background-color: var(--chestnut);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-nav a {
-  color: var(--vanilla);
+.navbar-brand,
+.nav-link,
+.dropdown-item {
+  color: var(--vanilla) !important;
   font-weight: 500;
-  transition: color 0.3s ease, transform 0.2s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.2s ease;
+}
+.dropdown-menu {
+  background-color: var(--chestnut);
 }
 
-a:hover {
+.navbar-brand:hover,
+.nav-link:hover,
+.dropdown-item:hover {
   color: var(--nyanza);
-  /* new addition */
   transform: translateY(-2px);
+}
+.dropdown-item:hover {
+  background-color: var(--chestnut) !important;
 }
 
 #bottom-bar {
@@ -120,12 +126,14 @@ a:hover {
   height: 30%;
   object-fit: cover;
   filter: brightness(0.85); /* new addition */
-  transition: transform 3s ease-in-out, opacity 1.5s ease-in-out;
+  transition:
+    transform 3s ease-in-out,
+    opacity 1.5s ease-in-out;
 }
 
 /* Animate zoom when active */
 .carousel-item.active img {
-  transform: scale(1.10); /* Slight zoom for depth */
+  transform: scale(1.1); /* Slight zoom for depth */
 }
 
 /* Enable GPU acceleration for smoother performance */
@@ -143,7 +151,6 @@ a:hover {
   color: var(--nyanza);
 }
 
-
 /* hover animation */
 
 .carousel-control-prev-icon,
@@ -157,7 +164,6 @@ a:hover {
 .carousel-control-next:hover .carousel-control-next-icon {
   transform: scale(1.2);
 }
-
 
 /* Table Section */
 table {
@@ -177,7 +183,7 @@ td {
   background-color: #fff;
   padding: 14px 16px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 td:first-child {
   font-weight: 600;
