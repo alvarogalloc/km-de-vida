@@ -22,10 +22,14 @@ const client = new MongoClient(db_uri,
 )
 
 let db;
+let drivers;
+let givers;
 async function connectDB() {
   try {
     await client.connect();
     db = client.db(process.env.DB_NAME);
+    drivers = db.collection("drivers");
+    givers = db.collection("givers");
     console.log("✅ Connected to MongoDB");
   } catch (err) {
     console.error("❌ MongoDB connection failed:", err);
@@ -33,12 +37,15 @@ async function connectDB() {
   }
 }
 
-await connectDB()
-const drivers = db.collection("drivers");
-const givers = db.collection("givers");
+// this is because mongo hangs the connection if we do not close it manually
+// so on ctrl + c it stops for good
+process.on('SIGINT', async () => {
+  await client.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
+});
 
-
-// workaround for modules in js
+await connectDB();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -47,11 +54,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 
-app.get('/',async (_, res) => {
+app.get('/',async (req, res) => {
   // get all the drivers and givers
   const all_drivers = await drivers.find({}).toArray()
-  const all_givers = await  givers.find({}).toArray()
-  res.render("index", {drivers: all_drivers, givers: all_givers})
+  const all_givers = await givers.find({}).toArray()
+
+
+  // notification if some
+  const { status, message } = req.query;
+  const notification = status && message ? { status, message } : null;
+  res.render("index", {drivers: all_drivers, givers: all_givers, notification})
 })
 app.get('/about', (_, res) => {
   res.render("about")
@@ -88,20 +100,20 @@ app.post('/join/giver', async (req, res) => {
   const errors = validate_giver(data);
   const notification = { status: "", message: "" };
 
+  // --- Validation errors ---
   if (errors.length > 0) {
-    notification.message = errors.join('\n');
     notification.status = "error";
-    return res.status(422).render('volunteer', { notification });
+    notification.message = errors.join('\n');
+    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
   }
 
   try {
-    await client.connect();
     // --- Check for duplicates ---
     const existing = await givers.findOne({ donorEmail: data.donorEmail.trim() });
     if (existing) {
       notification.status = "error";
-      notification.message = "A donor already registered with this email.";
-      return res.status(409).render('volunteer', { notification });
+      notification.message = "A donor is already registered with this email.";
+      return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
     }
 
     // --- Prepare new giver document ---
@@ -119,55 +131,48 @@ app.post('/join/giver', async (req, res) => {
     await givers.insertOne(newGiver);
 
     notification.status = "success";
-    notification.message = `Thanks ${newGiver.donorEmail}! We'll get in touch soon.`;
+    notification.message = `Thanks ${newGiver.contactPerson || newGiver.orgName}! We'll get in touch soon.`;
 
-    return res.status(201).render('index', { notification });
+    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
 
   } catch (err) {
     console.error("Error adding giver:", err);
     notification.status = "error";
     notification.message = "Something went wrong while saving your information. Please try again later.";
-    return res.status(500).render('volunteer', { notification });
-  } finally {
-    await client.close();
-  }
-});
+    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+  } });
 
 
 app.post('/join/driver', async (req, res) => {
   const data = req.body;
-  console.log(JSON.stringify(data))
   const notification = { status: "", message: "" };
   const errors = [];
 
-  // --- Validate input ---
-  // if (!data.volunteerName || data.volunteerName.trim().length < 2)
-  //   errors.push("Full name is required and must be at least 2 characters.");
-  // if (!data.volunteerEmail || !/^[^@]+@[^@]+\.[^@]+$/.test(data.volunteerEmail))
-  //   errors.push("A valid email address is required.");
-  // if (!data.volunteerPhone || !/^\+?\d{7,15}$/.test(data.volunteerPhone))
-  //   errors.push("A valid phone number is required (7–15 digits).");
-  // if (!data.availability || data.availability.trim().length < 3)
-  //   errors.push("Please select your availability.");
+  
+  if (!data.volunteerName || data.volunteerName.trim().length < 2)
+    errors.push("Full name is required and must be at least 2 characters.");
+  if (!data.volunteerEmail || !/^[^@]+@[^@]+\.[^@]+$/.test(data.volunteerEmail))
+    errors.push("A valid email address is required.");
+  if (!data.volunteerPhone || !/^\+?\d{7,15}$/.test(data.volunteerPhone))
+    errors.push("A valid phone number is required (7–15 digits).");
+  if (!data.availability || data.availability.trim().length < 3)
+    errors.push("Please select your availability.");
+  
 
+  // --- Handle validation errors ---
   if (errors.length > 0) {
-    console.log("driver error!!!")
     notification.status = "error";
     notification.message = errors.join('\n');
-    return res.render('volunteer', { notification });
+    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
   }
 
   try {
-    await client.connect();
-
     // --- Check duplicates ---
     const existing = await drivers.findOne({ volunteerEmail: data.volunteerEmail.trim() });
-
     if (existing) {
-      console.log("duplicate error")
       notification.status = "error";
       notification.message = "A volunteer is already registered with this email.";
-      return res.status(409).render('volunteer', { notification });
+      return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
     }
 
     // --- Insert new driver ---
@@ -184,17 +189,14 @@ app.post('/join/driver', async (req, res) => {
     notification.status = "success";
     notification.message = `Thanks ${newDriver.volunteerName}! You’re now registered as a volunteer driver.`;
 
-    return res.status(201).render('index', { notification });
+    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
 
   } catch (err) {
     console.error("Error adding driver:", err);
     notification.status = "error";
     notification.message = "Something went wrong while saving your information. Please try again later.";
-    return res.status(500).render('volunteer', { notification });
-  } finally {
-    await client.close();
-  }
-});
+    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+  } });
 
 app.listen(port, () => {
   console.log(`Kilometros de Vida running at port ${port}`)

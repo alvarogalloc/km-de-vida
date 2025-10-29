@@ -4,7 +4,7 @@ Regina Beltrán López
 Daniela Terán Martija
 
 # deployment
-our service is currently deployed  [here](https://km-de-vida.onrender.com/)
+our service is currently deployed  [here](https://km-de-vida.vercel.app/)
 
 # Ai report
 
