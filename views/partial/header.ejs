@@ -15,62 +15,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Tangerine:wght@400;700&display=swap" rel="stylesheet"/>
   </head>
 
-  <body class="d-flex flex-column h-100">
+  <body>
+    <!-- STICKY HEADER (Using your classes) -->
     <header class="header">
-      
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand" href="/">Kilometros de Vida</a>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <div style = "padding-right: 20px">
+                    <a href="/">
+                        <img src="images/logo.svg" alt="Logo" height="40" />
+                    </a>
+                </div>
+                
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-     data-bs-theme="dark"
-    >
-      <!-- data-bs-theme this is for the button to be white-->
-
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/about">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/volunteer">Volunteer</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Link to SDGs
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li>
-              <a class="dropdown-item" href="https://sdgs.un.org/goals/goal2" target="_blank">SDG #2</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="https://sdgs.un.org/goals/goal12" target="_blank">SDG #12</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+                <a class="navbar-brand text-vanilla" href="/">Kilometros de Vida</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about">Quiénes somos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/volunteer">Sé voluntario</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
+  </body>
 

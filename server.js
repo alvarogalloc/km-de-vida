@@ -8,8 +8,8 @@ import bodyParser from 'body-parser'
 config();
 
 const app = express()
-const port = process.env.PORT || ''
-const db_uri = process.env.ATLAS_URI || ''
+const port = process.env.PORT || 5050
+const db_uri = process.env.ATLAS_URI || '' // make sure to set this in .env!!
 
 const client = new MongoClient(db_uri,
   {
@@ -37,8 +37,9 @@ async function connectDB() {
   }
 }
 
-// this is because mongo hangs the connection if we do not close it manually
-// so on ctrl + c it stops for good
+// mongo keeps running if we don't stop it here
+// so when we press ctrl+c it actually quits
+// TODO: maybe handle other signals too?
 process.on('SIGINT', async () => {
   await client.close();
   console.log('MongoDB connection closed');
@@ -51,19 +52,34 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json()); // Add JSON body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 
-app.get('/',async (req, res) => {
-  // get all the drivers and givers
+// here are the api endpoints
+// simple get for data
+app.get('/api/data', async (req, res) => {
+  try {
+    const all_drivers = await drivers.find({}).toArray();
+    const all_givers = await givers.find({}).toArray();
+    res.json({ drivers: all_drivers, givers: all_givers });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
+app.get('/', async (req, res) => {
+  // grab everyone from the db
   const all_drivers = await drivers.find({}).toArray()
   const all_givers = await givers.find({}).toArray()
 
 
-  // notification if some
+  // check if we need to show a message
   const { status, message } = req.query;
   const notification = status && message ? { status, message } : null;
-  res.render("index", {drivers: all_drivers, givers: all_givers, notification})
+
+  // render the index page with all the data
+  res.render("index", { drivers: all_drivers, givers: all_givers, notification })
 })
 app.get('/about', (_, res) => {
   res.render("about")
@@ -76,6 +92,8 @@ app.get('/contact', (_, res) => {
 })
 
 
+// helper to validate giver data
+// returns array of error strings
 function validate_giver(data) {
   const errors = [];
 
@@ -98,25 +116,17 @@ function validate_giver(data) {
 app.post('/join/giver', async (req, res) => {
   const data = req.body;
   const errors = validate_giver(data);
-  const notification = { status: "", message: "" };
 
-  // --- Validation errors ---
   if (errors.length > 0) {
-    notification.status = "error";
-    notification.message = errors.join('\n');
-    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+    return res.status(400).json({ status: "error", message: errors.join('\n') });
   }
 
   try {
-    // --- Check for duplicates ---
     const existing = await givers.findOne({ donorEmail: data.donorEmail.trim() });
     if (existing) {
-      notification.status = "error";
-      notification.message = "A donor is already registered with this email.";
-      return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+      return res.status(409).json({ status: "error", message: "A donor is already registered with this email." });
     }
 
-    // --- Prepare new giver document ---
     const newGiver = {
       orgName: data.orgName.trim(),
       contactPerson: data.contactPerson.trim(),
@@ -127,28 +137,27 @@ app.post('/join/giver', async (req, res) => {
       createdAt: new Date().toISOString()
     };
 
-    // --- Insert into MongoDB ---
     await givers.insertOne(newGiver);
 
-    notification.status = "success";
-    notification.message = `Thanks ${newGiver.contactPerson || newGiver.orgName}! We'll get in touch soon.`;
-
-    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+    return res.status(201).json({
+      status: "success",
+      message: `Thanks ${newGiver.contactPerson || newGiver.orgName}! We'll get in touch soon.`
+    });
 
   } catch (err) {
     console.error("Error adding giver:", err);
-    notification.status = "error";
-    notification.message = "Something went wrong while saving your information. Please try again later.";
-    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
-  } });
+    return res.status(500).json({
+      status: "error",
+      message: "Something went wrong while saving your information. Please try again later."
+    });
+  }
+});
 
 
 app.post('/join/driver', async (req, res) => {
   const data = req.body;
-  const notification = { status: "", message: "" };
   const errors = [];
 
-  
   if (!data.volunteerName || data.volunteerName.trim().length < 2)
     errors.push("Full name is required and must be at least 2 characters.");
   if (!data.volunteerEmail || !/^[^@]+@[^@]+\.[^@]+$/.test(data.volunteerEmail))
@@ -157,25 +166,17 @@ app.post('/join/driver', async (req, res) => {
     errors.push("A valid phone number is required (7–15 digits).");
   if (!data.availability || data.availability.trim().length < 3)
     errors.push("Please select your availability.");
-  
 
-  // --- Handle validation errors ---
   if (errors.length > 0) {
-    notification.status = "error";
-    notification.message = errors.join('\n');
-    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+    return res.status(400).json({ status: "error", message: errors.join('\n') });
   }
 
   try {
-    // --- Check duplicates ---
     const existing = await drivers.findOne({ volunteerEmail: data.volunteerEmail.trim() });
     if (existing) {
-      notification.status = "error";
-      notification.message = "A volunteer is already registered with this email.";
-      return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+      return res.status(409).json({ status: "error", message: "A volunteer is already registered with this email." });
     }
 
-    // --- Insert new driver ---
     const newDriver = {
       volunteerName: data.volunteerName.trim(),
       volunteerEmail: data.volunteerEmail.trim(),
@@ -186,17 +187,19 @@ app.post('/join/driver', async (req, res) => {
 
     await drivers.insertOne(newDriver);
 
-    notification.status = "success";
-    notification.message = `Thanks ${newDriver.volunteerName}! You’re now registered as a volunteer driver.`;
-
-    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
+    return res.status(201).json({
+      status: "success",
+      message: `Thanks ${newDriver.volunteerName}! You’re now registered as a volunteer driver.`
+    });
 
   } catch (err) {
     console.error("Error adding driver:", err);
-    notification.status = "error";
-    notification.message = "Something went wrong while saving your information. Please try again later.";
-    return res.redirect(`/?status=${encodeURIComponent(notification.status)}&message=${encodeURIComponent(notification.message)}`);
-  } });
+    return res.status(500).json({
+      status: "error",
+      message: "Something went wrong while saving your information. Please try again later."
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Kilometros de Vida running at port ${port}`)

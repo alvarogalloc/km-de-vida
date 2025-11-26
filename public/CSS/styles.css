@@ -1,11 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Orbitron:wght@400..900&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Tangerine:wght@400;700&display=swap");
 
+@import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Orbitron:wght@400..900&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Tangerine:wght@400;700&display=swap');
+
 :root {
-  --nyanza: #eaf4d3;
-  --vanilla: #dbcdae;
-  --rosy-brown: #ca907e;
-  --chestnut: #5e4641;
-  --golden-brown: #895b1e;
+  --nyanza: #ffffff;
+  --vanilla: #000000;
+  --rosy-brown: #3e2613;
+  --chestnut: #ab614c;
+  --golden-brown: #eaff00;
+  --max-blue-purp: #3bb91f;
 
   /* new additions */
   --text-dark: #3a2e2a;
@@ -46,7 +49,7 @@
   background-color: var(--golden-brown) !important;
 }
 body {
-  font-family: "Epunda Slab", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -58,11 +61,15 @@ body {
   font-family: "Epunda Slab", sans-serif;
   background-color: var(--chestnut);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1020; /* Stays above other content */
 }
 
 .headersOfPages {
   font-family: "Playwrite GB J", cursive;
 }
+
 
 .navbar-brand,
 .nav-link,
@@ -94,75 +101,6 @@ body {
   font-size: 24px;
   text-align: center;
   margin: 20px;
-}
-
-/* some edits for the carousel animation */
-
-/* Smooth fade between slides */
-.carousel-fade .carousel-inner .carousel-item {
-  opacity: 0;
-  transition: opacity 3.5s ease-in-out;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 30%;
-}
-
-.carousel-fade .carousel-inner .active {
-  opacity: 1;
-  position: relative;
-  z-index: 2;
-}
-
-.carousel-item {
-  max-height: 650px; /* the preferred height */
-  transition: opacity 3.5s ease-in-out; /* new addition */
-}
-
-/* Smooth zoom-in effect */
-.carousel-item img {
-  width: 100%;
-  height: 30%;
-  object-fit: cover;
-  filter: brightness(0.85); /* new addition */
-  transition:
-    transform 3s ease-in-out,
-    opacity 1.5s ease-in-out;
-}
-
-/* Animate zoom when active */
-.carousel-item.active img {
-  transform: scale(1.1); /* Slight zoom for depth */
-}
-
-/* Enable GPU acceleration for smoother performance */
-.carousel-item img {
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
-.carousel-caption {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 12px;
-  padding: 1rem 2rem;
-  backdrop-filter: blur(4px);
-  font-family: "Epunda Slab", cursive;
-  color: var(--nyanza);
-}
-
-/* hover animation */
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  transition: transform 0.3s ease;
-}
-
-.carousel-control-prev:hover .carousel-control-prev-icon {
-  transform: scale(1.2);
-}
-.carousel-control-next:hover .carousel-control-next-icon {
-  transform: scale(1.2);
 }
 
 /* Table Section */
@@ -210,4 +148,182 @@ footer a {
 }
 footer a:hover {
   color: var(--nyanza);
+}
+
+/* --- IMAGE BANNER STYLES --- */
+.image-banner {
+    position: relative; /* Container for absolute positioning of text */
+    width: 100%;
+    height: 95vh; /* Adjust height as needed */
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    filter: brightness(0.6); /* Darken the image slightly for text readability */
+}
+
+.banner-overlay-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    text-align: left;
+    padding: 20px;
+    color: var(--nyanza); /* Use your light color for contrast */
+    font-family: "Epunda Slab", sans-serif;
+}
+
+.banner-title {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .banner-title {
+        font-size: 2.5rem; 
+    }
+}
+
+.banner-subtitle {
+    font-size: 1.75rem;
+    font-weight: 300;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Add margin to space out the main content from the header */
+.main-content {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    min-height: 100vh; /* ??? */
+}
+
+/* Style for the content section below the full-width banner */
+.section-separator {
+    min-height: 50vh; 
+    min-width: 75%;
+    padding: 2rem 0; 
+    background-color: var(--nyanza); /* Use a light background for contrast */
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    margin-top: -1px;
+    position: relative; /* Needed to contain the overlap-box if we used absolute positioning */
+}
+
+/* --- NEW OVERLAP BOX STYLES --- */
+.overlap-box {
+    background-color: white; 
+    width: 90%; /* Take up most of the width */
+    max-width: 800px; /* Limit the size on huge screens */
+    height: auto; /* Height adapts to content */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10; /* Ensure it is above the image banner (z-index 0) */
+    
+    /* KEY FOR OVERLAP: Pull the box up by a negative margin */
+    margin: 0 auto; /* Center the box horizontally */
+    margin-top: -80px; /* Pull the box up by 80px to overlap the banner */
+    
+    /* Optional: Add a smooth animation or border */
+    border: 1px solid var(--vanilla);
+}
+
+/* Ensure the main content starts below the box, not where the section-separator starts */
+.content-padding {
+    padding-top: 40px; /* Add padding to push the main content down below the overlap box */
+}
+
+
+/* This CSS is for the volunteer page */
+.main-header-section {
+    padding: 4rem 0 2rem;
+    background-color: var(--nyanza);
+    box-shadow: inset 0 -5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.goals-container {
+    padding: 3rem 0;
+}
+
+.card {
+    border: none !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-icon {
+    color: var(--rosy-brown);
+    margin-bottom: 1rem;
+}
+
+.btn-custom {
+    background-color: var(--rosy-brown);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: var(--golden-brown);
+}
+
+
+/* This is for the websites footer */
+/* 💥 FOOTER STYLES 💥 */
+.site-footer {
+    background-color: var(--chestnut);
+    color: var(--vanilla);
+    padding-top: 4rem;
+    position: relative;
+
+}
+
+.footer-link, .social-icon-link {
+    color: var(--nyanza); /* Light color for visibility */
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+}
+
+.footer-link:hover, .social-icon-link:hover {
+    color: var(--rosy-brown);
+}
+
+.social-icons-group a {
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+
+.footer-contact-header {
+    color: white; /* Make the contact header stand out */
+    margin-bottom: 1.5rem;
+}
+
+/* Copyright strip at the very bottom */
+.footer-bottom {
+    background-color: #4a3834; /* Slightly darker shade of chestnut */
+    padding: 1rem 0;
+}
+
+.homepageImgL {
+  padding-left: 30px;
+
+}
+
+.homepageImgR {
+  padding-right: 30px;
+ 
 }
