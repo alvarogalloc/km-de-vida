@@ -9,7 +9,7 @@ config();
 
 const app = express()
 const port = process.env.PORT || 5050
-const db_uri = process.env.ATLAS_URI || ''
+const db_uri = process.env.ATLAS_URI || '' // make sure to set this in .env!!
 
 const client = new MongoClient(db_uri,
   {
@@ -39,6 +39,7 @@ async function connectDB() {
 
 // mongo keeps running if we don't stop it here
 // so when we press ctrl+c it actually quits
+// TODO: maybe handle other signals too?
 process.on('SIGINT', async () => {
   await client.close();
   console.log('MongoDB connection closed');
@@ -56,6 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 
 // here are the api endpoints
+// simple get for data
 app.get('/api/data', async (req, res) => {
   try {
     const all_drivers = await drivers.find({}).toArray();
@@ -75,6 +77,8 @@ app.get('/', async (req, res) => {
   // check if we need to show a message
   const { status, message } = req.query;
   const notification = status && message ? { status, message } : null;
+
+  // render the index page with all the data
   res.render("index", { drivers: all_drivers, givers: all_givers, notification })
 })
 app.get('/about', (_, res) => {
@@ -88,6 +92,8 @@ app.get('/contact', (_, res) => {
 })
 
 
+// helper to validate giver data
+// returns array of error strings
 function validate_giver(data) {
   const errors = [];
 
