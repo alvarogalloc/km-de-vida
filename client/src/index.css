@@ -1,12 +1,35 @@
-@import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Orbitron:wght@400..900&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Tangerine:wght@400;700&display=swap");
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
+@theme {
+  /* Semantic Color Palette */
+  --color-primary: #2C3E50;
+  /* Deep Slate Blue - Trust, Professionalism */
+  --color-secondary: #E67E22;
+  /* Vibrant Orange - Energy, Action */
+  --color-accent: #27AE60;
+  /* Fresh Green - Growth, Sustainability */
+
+  --color-surface: #FFFFFF;
+  /* White - Cleanliness */
+  --color-background: #F8F9FA;
+  /* Light Gray - Soft Background */
+  --color-text-main: #2C3E50;
+  /* Dark Blue/Gray - Readable Text */
+  --color-text-muted: #7F8C8D;
+  /* Gray - Secondary Text */
+  --color-text-light: #ECF0F1;
+  /* Light Gray - Text on Dark Backgrounds */
+
+  /* Typography */
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Playfair Display", serif;
+}
 
 @layer base {
   body {
-    @apply bg-bg-light text-text-dark font-sans;
+    @apply bg-background text-text-main font-sans antialiased;
   }
 
   h1,
@@ -15,6 +38,6 @@
   h4,
   h5,
   h6 {
-    @apply font-header text-chestnut;
+    @apply font-serif text-primary font-bold;
   }
 }

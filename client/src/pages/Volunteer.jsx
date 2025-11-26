@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 
 export default function Volunteer() {
+    // form state
     const [formData, setFormData] = useState({
         volunteerName: '',
         volunteerEmail: '',
@@ -10,209 +11,135 @@ export default function Volunteer() {
         availability: ''
     });
     const [status, setStatus] = useState({ type: '', message: '' });
-    const [loading, setLoading] = useState(false);
 
+    // update form data on change
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setStatus({ type: '', message: '' });
+        setStatus({ type: 'loading', message: 'Enviando...' });
 
         try {
+            // send to backend
             const response = await axios.post('/join/driver', formData);
             setStatus({ type: 'success', message: response.data.message });
+            // clear form on success
             setFormData({ volunteerName: '', volunteerEmail: '', volunteerPhone: '', availability: '' });
         } catch (error) {
+            // handle errors nicely
             setStatus({
                 type: 'error',
-                message: error.response?.data?.message || 'Something went wrong. Please try again.'
+                message: error.response?.data?.message || 'Hubo un error al enviar el formulario.'
             });
-        } finally {
-            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-bg-light py-12 px-4 sm:px-6 lg:px-8">
-            {/* this is the top part with the big title */}
-            <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-5xl font-bold text-chestnut font-header mb-4">
-                    Juntos podemos acabar con el hambre en Guadalajara.
-                </h1>
-            </div>
+        <div className="min-h-screen bg-background pt-24 pb-12">
+            <div className="container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-2xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100"
+                >
+                    <h1 className="text-3xl md:text-4xl font-bold text-primary font-serif mb-6 text-center">
+                        Únete como Voluntario
+                    </h1>
+                    <p className="text-text-muted text-center mb-10 text-lg">
+                        Tu tiempo puede cambiar vidas. Ayúdanos a transportar alimentos y esperanza.
+                    </p>
 
-            {/* these are the cards that show what you can do */}
-            <div className="container mx-auto max-w-6xl mb-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                    {/* card for driving */}
-                    <motion.div
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-rosy-brown"
-                    >
-                        <div className="p-8 text-center">
-                            <div className="text-rosy-brown mb-4 flex justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" className="bi bi-truck" viewBox="0 0 16 16">
-                                    <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.5A1.5 1.5 0 0 1 15 6.5V11h-1v-5a1 1 0 0 0-1-1H3V3.5a.5.5 0 0 0-.5-.5h-1A.5.5 0 0 0 1 3.5v.784L0 3.5zm2.5 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m12-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M13 10V6.5a.5.5 0 0 0-.5-.5H12V10h1z" />
-                                </svg>
-                            </div>
-                            <h5 className="text-2xl font-bold text-chestnut mb-3 font-header">Volunteer to Transport Food</h5>
-                            <p className="text-gray-600 mb-6">Transport food in your car across the city to various distribution centers.</p>
-                            <button onClick={() => document.getElementById('volunteer-form').scrollIntoView({ behavior: 'smooth' })} className="bg-rosy-brown text-white px-6 py-2 rounded-full font-medium hover:bg-golden-brown hover:text-rosy-brown transition-colors">
-                                Sign Up to Drive
-                            </button>
-                        </div>
-                    </motion.div>
-
-                    {/* card for businesses giving food */}
-                    <motion.div
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-chestnut"
-                    >
-                        <div className="p-8 text-center">
-                            <div className="text-chestnut mb-4 flex justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" className="bi bi-bag" viewBox="0 0 16 16">
-                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3a.5.5 0 0 0-.5.5V5h-7V4.5a.5.5 0 0 0-.5-.5h-1A1.5 1.5 0 0 0 0 5.5v10A1.5 1.5 0 0 0 1.5 17h13A1.5 1.5 0 0 0 16 15.5v-10A1.5 1.5 0 0 0 14.5 4h-1zM15 5.5v10a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5z" />
-                                </svg>
-                            </div>
-                            <h5 className="text-2xl font-bold text-chestnut mb-3 font-header">Donate Goods</h5>
-                            <p className="text-gray-600 mb-6">Sign up your local business to help ensure food does not go to waste.</p>
-                            <a href="/donate" className="bg-chestnut text-white px-6 py-2 rounded-full font-medium hover:bg-rosy-brown transition-colors inline-block">
-                                Enroll Business
-                            </a>
-                        </div>
-                    </motion.div>
-
-                    {/* card for giving money */}
-                    <motion.div
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-golden-brown"
-                    >
-                        <div className="p-8 text-center">
-                            <div className="text-golden-brown mb-4 flex justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" className="bi bi-currency-dollar" viewBox="0 0 16 16">
-                                    <path d="M4 10.5a.5.5 0 0 0 .5.5h3a.5.5 0 1 0 0-1H4.5a.5.5 0 0 0-.5.5zm5.397-3.045c.465-.246.967-.442 1.353-.642.5-.252.793-.578.793-.956 0-.61-.502-1.007-1.464-1.007-.639 0-1.183.193-1.578.471l-.105.08A2.99 2.99 0 0 0 6 5.82v.228a.4.4 0 0 0 .26.398c.459.26.963.504 1.35.738.528.293.791.64.791 1.103 0 .749-.623 1.157-1.637 1.157-.738 0-1.282-.245-1.667-.534l-.105-.08a2.986 2.986 0 0 0-1.35-.749v-.228a.4.4 0 0 0-.26-.398c-.459-.26-.963-.504-1.35-.738-.528-.293-.791-.64-.791-1.103 0-.749.623-1.157 1.637-1.157.738 0 1.282.245 1.667.534l.105.08a2.986 2.986 0 0 0 1.35.749v.228a.4.4 0 0 0 .26.398z" />
-                                </svg>
-                            </div>
-                            <h5 className="text-2xl font-bold text-chestnut mb-3 font-header">Make a Monetary Donation</h5>
-                            <p className="text-gray-600 mb-6">Every dollar helps fuel our operations and directly assists those in need.</p>
-                            <button className="bg-golden-brown text-rosy-brown px-6 py-2 rounded-full font-medium hover:bg-rosy-brown hover:text-white transition-colors">
-                                Donate Now
-                            </button>
-                        </div>
-                    </motion.div>
-
-                    {/* card for sharing on social media */}
-                    <motion.div
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-max-blue-purp"
-                    >
-                        <div className="p-8 text-center">
-                            <div className="text-max-blue-purp mb-4 flex justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" className="bi bi-megaphone" viewBox="0 0 16 16">
-                                    <path d="M13 2.5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-1 0V3a.5.5 0 0 1 .5-.5z" />
-                                    <path d="M10 1.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-1 0V2a.5.5 0 0 1 .5-.5z" />
-                                    <path d="M7 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z" />
-                                    <path d="M4 5.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5z" />
-                                    <path d="M1.5 7.5a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5z" />
-                                </svg>
-                            </div>
-                            <h5 className="text-2xl font-bold text-chestnut mb-3 font-header">Spread the Word</h5>
-                            <p className="text-gray-600 mb-6">Help us reach more people by sharing our mission and goals on social media.</p>
-                            <button className="bg-max-blue-purp text-white px-6 py-2 rounded-full font-medium hover:bg-chestnut transition-colors">
-                                Share Our Mission
-                            </button>
-                        </div>
-                    </motion.div>
-
-                </div>
-            </div>
-
-            <div id="volunteer-form" className="max-w-md mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
-                <div className="bg-chestnut py-6 px-8">
-                    <h2 className="text-3xl font-bold text-white text-center font-header">Sé Voluntario</h2>
-                    <p className="text-nyanza/80 text-center mt-2">Únete a nuestra red de conductores</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="py-8 px-8 space-y-6">
                     {status.message && (
                         <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`p-4 rounded-lg text-sm ${status.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className={`p-4 rounded-lg mb-8 text-center ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+                                status.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+                                    'bg-blue-50 text-blue-700 border border-blue-200'
+                                }`}
                         >
                             {status.message}
                         </motion.div>
                     )}
 
-                    <div>
-                        <label htmlFor="volunteerName" className="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                        <input
-                            type="text"
-                            name="volunteerName"
-                            id="volunteerName"
-                            required
-                            value={formData.volunteerName}
-                            onChange={handleChange}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-chestnut focus:border-chestnut"
-                        />
-                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div>
+                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="volunteerName">
+                                Nombre Completo
+                            </label>
+                            <input
+                                type="text"
+                                id="volunteerName"
+                                name="volunteerName"
+                                value={formData.volunteerName}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label htmlFor="volunteerEmail" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                        <input
-                            type="email"
-                            name="volunteerEmail"
-                            id="volunteerEmail"
-                            required
-                            value={formData.volunteerEmail}
-                            onChange={handleChange}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-chestnut focus:border-chestnut"
-                        />
-                    </div>
+                        <div>
+                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="volunteerEmail">
+                                Correo Electrónico
+                            </label>
+                            <input
+                                type="email"
+                                id="volunteerEmail"
+                                name="volunteerEmail"
+                                value={formData.volunteerEmail}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label htmlFor="volunteerPhone" className="block text-sm font-medium text-gray-700">Teléfono</label>
-                        <input
-                            type="tel"
-                            name="volunteerPhone"
-                            id="volunteerPhone"
-                            required
-                            value={formData.volunteerPhone}
-                            onChange={handleChange}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-chestnut focus:border-chestnut"
-                        />
-                    </div>
+                        <div>
+                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="volunteerPhone">
+                                Teléfono
+                            </label>
+                            <input
+                                type="tel"
+                                id="volunteerPhone"
+                                name="volunteerPhone"
+                                value={formData.volunteerPhone}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label htmlFor="availability" className="block text-sm font-medium text-gray-700">Disponibilidad</label>
-                        <select
-                            name="availability"
-                            id="availability"
-                            required
-                            value={formData.availability}
-                            onChange={handleChange}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-chestnut focus:border-chestnut"
+                        <div>
+                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="availability">
+                                Disponibilidad
+                            </label>
+                            <select
+                                id="availability"
+                                name="availability"
+                                value={formData.availability}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-white"
+                                required
+                            >
+                                <option value="">Selecciona una opción</option>
+                                <option value="weekday_mornings">Mañanas entre semana</option>
+                                <option value="weekday_afternoons">Tardes entre semana</option>
+                                <option value="weekends">Fines de semana</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={status.type === 'loading'}
+                            className="w-full bg-secondary text-white font-bold py-4 rounded-lg hover:bg-primary transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                         >
-                            <option value="">Selecciona una opción</option>
-                            <option value="Weekdays Morning">Entre semana (Mañanas)</option>
-                            <option value="Weekdays Afternoon">Entre semana (Tardes)</option>
-                            <option value="Weekends">Fines de semana</option>
-                            <option value="Flexible">Flexible</option>
-                        </select>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rosy-brown hover:bg-golden-brown hover:text-rosy-brown focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-chestnut transition-colors disabled:opacity-50"
-                    >
-                        {loading ? 'Enviando...' : 'Registrarse'}
-                    </button>
-                </form>
+                            {status.type === 'loading' ? 'Enviando...' : 'Registrarme'}
+                        </button>
+                    </form>
+                </motion.div>
             </div>
         </div>
     );
