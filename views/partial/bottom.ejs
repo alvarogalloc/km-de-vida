@@ -1,45 +1,139 @@
-<!-- Bottom Bar -->
-    <footer id="bottom-bar" class="footer mt-auto py-3 bg-body-tertiary">
-      <div class="container d-flex justify-content-between align-items-center">
-        <!-- Logo -->
-        <a href="#">
-          <img src="images/logo.svg" alt="Logo" height="40" />
-        </a>
+<!-- 💥 FOOTER COMPONENT 💥 -->
+    <footer class="site-footer text-start">
+        <div class="container">
+            <div class="row">
 
-        <!-- Nav Links -->
-        <nav class="navbar">
-          <a class="nav-link px-2 text-body-secondary" href="/">Home</a>
-          <a class="nav-link px-2 text-body-secondary" href="/about">About</a>
-          <a class="nav-link px-2 text-body-secondary" href="/contact">Contact</a>
-        </nav>
-      </div>
+                <!-- Column 1: Branding & Social -->
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <h5 class="fw-bold fs-4" style="color: var(--nyanza);">WebsiteName</h5>
+                    <p class="mb-1">
+                        <a href="tel:555-123-4567" class="footer-link text-vanilla text-decoration-none">(555) 123-4567</a>
+                    </p>
+                    <p class="mb-3 text-vanilla">123 Heritage Lane, Anytown, CA 90210</p>
+                    
+                    <div class="social-icons-group">
+                        <!-- Facebook Icon (Custom SVG) -->
+                        <a href="https://www.youtube.com/watch?v=wg0yjOHiN_I" target="_blank" class="social-icon-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.582-.001.002 3.599.002 8.049c0 4.013 2.915 7.37 6.78 7.942v-5.63h-2.03V8.049h2.03V6.305c0-2.012 1.185-3.131 3.02-3.131.876 0 1.62.065 1.62.065v1.78h-1.018c-.993 0-1.288.618-1.288 1.258v1.51h2.24l-.324 2.37h-1.916v5.63c3.86-0.57 6.775-3.93 6.775-7.942z"/>
+                            </svg>
+                        </a>
+                        
+                        <!-- Instagram Icon (Custom SVG) -->
+                        <a href="https://www.youtube.com/watch?v=wg0yjOHiN_I" target="_blank" class="social-icon-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.27 1.054 2.5 1.5 1.731 1.946.942 2.731.496 3.496.058 4.35-.008 5.556.048 6.403.088 7.25.127 7.729.127 8s-.04.75-.088.897c-.058.847-.024 1.254.34 2.112.384.92.986 1.838 1.838 2.693.855.855 1.773 1.457 2.693 1.838.857.364 1.264.398 2.112.34.847-.048 1.573-.13 2.302-.13s1.455.082 2.302.13c.848.057 1.254.023 2.112-.34.92-.384 1.838-.986 2.693-1.838.855-.855 1.457-1.773 1.838-2.693.364-.857.398-1.264.34-2.112-.048-.847-.13-1.573-.13-2.302s.082-1.455.13-2.302c.057-.848.023-1.254-.34-2.112-.384-.92-.986-1.838-1.838-2.693C13.562 2.112 12.644 1.51 11.724 1.125c-.857-.364-1.264-.398-2.112-.34C8.75 0 8.049 0 8 0zm0 1.5c.792 0 1.439.011 2.227.045.787.039 1.155.085 1.933.411a3.996 3.996 0 0 1 1.096.671 3.996 0 0 1 .671 1.096c.326.778.372 1.146.411 1.933.034.788.045 1.435.045 2.227s-.011 1.439-.045 2.227c-.039.787-.085 1.155-.411 1.933a3.996 3.996 0 0 1-.671 1.096 3.996 0 0 1-1.096.671c-.778.326-1.146.372-1.933.411-.788.034-1.435.045-2.227.045s-1.439-.011-2.227-.045c-.787-.039-1.155-.085-1.933-.411a3.996 3.996 0 0 1-.671-1.096 3.996 0 0 1-1.096-.671c-.326-.778-.372-1.146-.411-1.933C1.511 9.5 1.5 8.853 1.5 8s.011-1.439.045-2.227c.039-.787.085-1.155.411-1.933a3.996 3.996 0 0 1 .671-1.096 3.996 0 0 1 1.096-.671c.778-.326 1.146-.372 1.933-.411C6.562 1.511 7.209 1.5 8 1.5zm0 1.5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                            </svg>
+                        </a>
+                        
+                        <!-- YouTube Icon (Custom SVG) -->
+                        <a href="https://www.youtube.com/watch?v=wg0yjOHiN_I" target="_blank" class="social-icon-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 12.695c-3.79 0-6.93-3.08-6.93-6.93s3.14-6.93 6.93-6.93 6.93 3.08 6.93 6.93-3.14 6.93-6.93 6.93zm-3.1-4.78v-1.61c0-.18.15-.33.33-.33h5.54c.18 0 .33.15.33.33v1.61c0 .18-.15.33-.33.33h-5.54c-.18 0-.33-.15-.33-.33z"/>
+                            </svg>
+                        </a>
+                    </div>
+                        <br>
+                        <a href="/">
+                            <img src="images/logo.svg" alt="Logo" height="40" />
+                        </a>
+                </div>
+
+                <!-- Column 2: Links -->
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <h5 class="fw-bold" style="color: var(--nyanza);">Comunidad</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="footer-link">Board of Directors</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="footer-link">Our Partners</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Contact Form -->
+                <div class="col-md-4">
+                    <h5 class="footer-contact-header fw-bold">We'd love to hear from you!</h5>
+                    <!-- Added ID to form for JavaScript handling -->
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="footerEmail" class="form-label visually-hidden">Email address</label>
+                            <input type="email" class="form-control" id="footerEmail" placeholder="Your Email" required style="border-radius: 6px; background-color: rgba(255,255,255,0.9);">
+                        </div>
+                        <div class="mb-3">
+                            <label for="footerMessage" class="form-label visually-hidden">Message</label>
+                            <textarea class="form-control" id="footerMessage" rows="3" placeholder="Your Message" required style="border-radius: 6px; background-color: rgba(255,255,255,0.9);"></textarea>
+                        </div>
+                        <!-- Changed type to button to prevent default submit behavior -->
+                        <button type="submit" class="btn btn-custom text-white w-100 fw-medium">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+            </div> <!-- End of Row -->
+        </div> <!-- End of Container -->
+        
+        <!-- Bottom Copyright Strip -->
+        <div class="footer-bottom mt-5">
+            <div class="container text-center"> 
+                <small class="text-secondary opacity-75">
+                    &copy; 2025 KDV. All Rights Reserved.
+                </small>
+            </div>
+        </div>
     </footer>
 
-
+    <!-- TOAST CONTAINER (Placed outside footer, before closing body) -->
+    <!-- This replaces the broken server-side logic -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="notification" class="toast text-bg-<%= locals.notification && notification.status === 'error' ? 'danger' : 'success'%>" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">Km de Vida</strong>
-          <small>Now</small>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        <div id="successToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <strong class="me-auto">Success!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Thank you! Your message has been received.
+            </div>
         </div>
-        <div class="toast-body">
-          <%=locals.notification && notification.message %>
-        </div>
-      </div>
     </div>
 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
+    <!-- Load Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Client-side JavaScript to handle form submission and show toast -->
     <script>
-      const notification = document.querySelector('#notification')
-      <% if (locals.notification) { %>
-        //notification.show
-          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(notification)
-          toastBootstrap.show()
-      <% } %>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contactForm');
+            const toastElement = document.getElementById('successToast');
+            let successToast;
+
+            // Initialize the Bootstrap Toast component only if it exists
+            if (toastElement) {
+                successToast = new bootstrap.Toast(toastElement);
+            }
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Stop the form from trying to navigate
+
+                // Basic validation check (Bootstrap handles required inputs, but we prevent submission)
+                if (form.checkValidity() === false) {
+                    event.stopPropagation();
+                    return;
+                }
+
+                // In a real application, you would send the data to a server here.
+                console.log('Form Submitted!');
+
+                // Show the success notification
+                if (successToast) {
+                    successToast.show();
+                }
+
+                // Clear the form fields after successful 'submission'
+                form.reset();
+            });
+        });
     </script>
-  </body>
-</html>
+</body>
