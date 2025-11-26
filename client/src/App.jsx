@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* main layout wrapper */}
       <Navbar />
       <main className="flex-grow">
         <Routes>
