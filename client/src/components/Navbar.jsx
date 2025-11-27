@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import logo from '/images/logo.svg';
+import Login from './Login';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -16,8 +17,8 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // If not home, always look "scrolled" (white bg, dark text) or just dark text?
-    // Let's force "scrolled" look on non-home pages for consistency and readability
+    //If not home, always look "scrolled" (white bg, dark text) or just dark text?
+    //Let's force "scrolled" look on non-home pages for consistency and readability
     const isScrolledState = scrolled || !isHome;
 
     return (
@@ -33,7 +34,7 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    {/* button for phones */}
+                    {/*button for phones*/}
                     <div className="lg:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
@@ -63,6 +64,7 @@ export default function Navbar() {
                         <Link to="/donate" className="bg-secondary text-white px-5 py-2 rounded-full font-medium hover:bg-white hover:text-secondary transition-all shadow-md">
                             Donar Alimentos
                         </Link>
+                        <Login />
                     </div>
                 </div>
 
@@ -81,6 +83,9 @@ export default function Navbar() {
                         <Link to="/donate" className="block py-3 text-secondary font-bold" onClick={() => setIsOpen(false)}>
                             Donar Alimentos
                         </Link>
+                        <div className="py-3 flex justify-center">
+                            <Login />
+                        </div>
                     </div>
                 )}
             </nav>
