@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import { useUser } from '../context/UserContext';
 
 export default function Giver() {
+    const { user } = useUser();
     // keep track of all the fields
     const [formData, setFormData] = useState({
         orgName: '',
@@ -10,8 +12,19 @@ export default function Giver() {
         donorEmail: '',
         donorPhone: '',
         foodType: '',
-        pickupTime: ''
+        pickupTime: '',
+        address: ''
     });
+
+    useEffect(() => {
+        if (user) {
+            setFormData(prev => ({
+                ...prev,
+                contactPerson: user.name,
+                donorEmail: user.email
+            }));
+        }
+    }, [user]);
     const [status, setStatus] = useState({ type: '', message: '' });
 
     const handleChange = (e) => {
@@ -24,13 +37,13 @@ export default function Giver() {
 
         try {
             // post to the giver endpoint
-            const response = await axios.post('/join/giver', formData);
+            const response = await axios.post('/join/giver', { ...formData, userId: user ? user._id : null });
             setStatus({ type: 'success', message: response.data.message });
 
             // reset everything
             setFormData({
-                orgName: '', contactPerson: '', donorEmail: '',
-                donorPhone: '', foodType: '', pickupTime: ''
+                orgName: '', contactPerson: user ? user.name : '', donorEmail: user ? user.email : '',
+                donorPhone: '', foodType: '', pickupTime: '', address: ''
             });
         } catch (error) {
             // show error message from server if possible
@@ -159,6 +172,22 @@ export default function Giver() {
                                 value={formData.pickupTime}
                                 onChange={handleChange}
                                 placeholder="Ej. Lunes a Viernes, 9am - 11am"
+                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
+                                required
+                            />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="address">
+                                Dirección de Recolección
+                            </label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                placeholder="Calle, Número, Colonia, Ciudad"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
                                 required
                             />

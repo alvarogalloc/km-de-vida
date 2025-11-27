@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import DonationMap from '../components/DonationMap';
 
 // Counter component for animated numbers
 const Counter = ({ from, to, duration = 2 }) => {
@@ -293,6 +294,21 @@ export default function Home() {
                                 Logramos que las ciudades sean más inclusivas, seguras, resilientes y sostenibles.
                             </p>
                         </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 3.6) MAP: Live Impact */}
+            <section className="py-24 bg-background">
+                <div className="container mx-auto px-6">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-primary font-serif mb-4">Impacto en Tiempo Real</h2>
+                        <p className="text-text-muted max-w-2xl mx-auto">
+                            Explora dónde se están realizando las donaciones y cómo estamos cubriendo la ciudad.
+                        </p>
+                    </div>
+                    <div className="shadow-2xl rounded-2xl overflow-hidden border-4 border-white">
+                        <DonationMap donations={givers} />
                     </div>
                 </div>
             </section>

@@ -1,11 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
 import Volunteer from './pages/Volunteer';
 import Giver from './pages/Giver';
 import Contact from './pages/Contact';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -19,6 +21,11 @@ function App() {
           <Route path="/volunteer" element={<Volunteer />} />
           <Route path="/donate" element={<Giver />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
       <Footer />
