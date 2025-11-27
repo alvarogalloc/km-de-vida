@@ -90,6 +90,9 @@ app.get('/volunteer', (_, res) => {
 app.get('/contact', (_, res) => {
   res.render("contact")
 })
+app.get('/map', (_, res) => {
+  res.render("map")
+})
 
 
 // helper to validate giver data

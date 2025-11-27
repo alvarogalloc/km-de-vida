@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Map - Km de Vida</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <div id="topbar" class="header bg-chestnut" style="padding: 12px;">
+    <input 
+      id="address" 
+      class="form-control" 
+      placeholder="Search an address..."
+      style="
+        flex: 1; 
+        padding: 10px; 
+        border-radius: 8px; 
+        border: 1px solid var(--rosy-brown);
+        font-family: 'Josefin Sans';
+      "
+    />
+
+    <select 
+      id="mode"
+      class="form-select"
+      style="
+        padding: 10px; 
+        border-radius: 8px; 
+        border: 1px solid var(--rosy-brown);
+        font-family: 'Josefin Sans';
+      "
+    >
+      <option value="driving">Driving</option>
+      <option value="walking">Walking</option>
+      <option value="cycling">Cycling</option>
+    </select>
+
+    <button 
+      id="goBtn" 
+      class="btn-custom text-nyanza"
+      style="border-radius: 8px; padding: 10px 16px;"
+    >
+      Go
+    </button>
+
+    <button 
+      id="trackBtn" 
+      class="btn-custom text-nyanza"
+      style="border-radius: 8px; padding: 10px 16px;"
+    >
+      Start tracking
+    </button>
+  </div>
+
+  <div id="map" style="height: calc(100vh - 70px);"></div>
+
+  <div 
+    id="info" 
+    class="overlap-box"
+    style="
+      position: absolute;
+      right: 20px;
+      top: 100px;
+      width: 240px;
+      display: none;
+      padding: 1rem;
+      font-family: 'Josefin Sans';
+    "
+  >
+    <div id="distance"></div>
+    <div id="duration" style="margin-top: 5px;"></div>
+    <div id="eta" style="margin-top: 5px;"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <script src="/js/map.js"></script>
+
+</body>
+</html>
