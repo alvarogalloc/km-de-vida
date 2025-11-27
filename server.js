@@ -89,7 +89,7 @@ await connectDB();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json()); // Add JSON body parser
 app.use(express.urlencoded({ extended: true }));
@@ -159,21 +159,21 @@ app.get('/', async (req, res) => {
   const { status, message } = req.query;
   const notification = status && message ? { status, message } : null;
 
-  // render the index page with all the data
-  res.render("index", { drivers: all_drivers, givers: all_givers, notification })
-})
-app.get('/about', (_, res) => {
-  res.render("about")
-})
-app.get('/volunteer', (_, res) => {
-  res.render("volunteer")
-})
-app.get('/contact', (_, res) => {
-  res.render("contact")
-})
-app.get('/map', (_, res) => {
-  res.render("map")
-})
+//   // render the index page with all the data
+//   res.render("index", { drivers: all_drivers, givers: all_givers, notification })
+// })
+// app.get('/about', (_, res) => {
+//   res.render("about")
+// })
+// app.get('/volunteer', (_, res) => {
+//   res.render("volunteer")
+// })
+// app.get('/contact', (_, res) => {
+//   res.render("contact")
+// })
+// app.get('/map', (_, res) => {
+//   res.render("map")
+// })
 
 
 // helper to validate giver data
