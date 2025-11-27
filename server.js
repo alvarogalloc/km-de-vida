@@ -149,19 +149,10 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
-app.get('/', async (req, res) => {
-  // grab everyone from the db
-  const all_drivers = await drivers.find({}).toArray()
-  const all_givers = await givers.find({}).toArray()
+app.get('/',  (req, res) => {
+      res.status(200).json({ msg: 'pinged to backend' });
 
-
-  // check if we need to show a message
-  const { status, message } = req.query;
-  const notification = status && message ? { status, message } : null;
-
-//   // render the index page with all the data
-//   res.render("index", { drivers: all_drivers, givers: all_givers, notification })
-// })
+})
 // app.get('/about', (_, res) => {
 //   res.render("about")
 // })
