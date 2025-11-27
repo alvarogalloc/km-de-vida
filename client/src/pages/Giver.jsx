@@ -37,7 +37,7 @@ export default function Giver() {
 
         try {
             // post to the giver endpoint
-            const response = await axios.post(${import.meta.env.VITE_BACKEND_HOST}+'/join/giver', { ...formData, userId: user ? user._id : null });
+            const response = await axios.post(import.meta.env.VITE_BACKEND_HOST+'/join/giver', { ...formData, userId: user ? user._id : null });
             setStatus({ type: 'success', message: response.data.message });
 
             // reset everything
