@@ -22,8 +22,8 @@ export default function Profile() {
     const fetchData = async () => {
         try {
             const [donationsRes, shiftsRes] = await Promise.all([
-                axios.get(`/api/my-donations?email=${user.email}`),
-                axios.get(`/api/my-volunteer-shifts?email=${user.email}`)
+                axios.get(`${import.meta.env.VITE_BACKEND_HOST}/api/my-donations?email=${user.email}`),
+                axios.get(`${import.meta.env.VITE_BACKEND_HOST}/api/my-volunteer-shifts?email=${user.email}`)
             ]);
             setDonations(donationsRes.data);
             setShifts(shiftsRes.data);
@@ -40,7 +40,7 @@ export default function Profile() {
             // Reusing the donation delete endpoint for now, ideally should have separate or generic one
             // Assuming we only have delete for donations implemented in this iteration based on plan
             if (type === 'donation') {
-                await axios.delete(`/api/donations/${id}`);
+                await axios.delete(`${import.meta.env.VITE_BACKEND_HOST}/api/donations/${id}`);
                 setDonations(donations.filter(d => d._id !== id));
             } else {
                 alert("La eliminación de turnos de voluntariado contacte al administrador.");
@@ -67,7 +67,7 @@ export default function Profile() {
 
     const saveEdit = async () => {
         try {
-            await axios.put(`/api/donations/${editingId}`, editForm);
+            await axios.put(`${import.meta.env.VITE_BACKEND_HOST}/api/donations/${editingId}`, editForm);
             setDonations(donations.map(d => d._id === editingId ? editForm : d));
             setEditingId(null);
         } catch (error) {

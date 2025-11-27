@@ -43,7 +43,7 @@ export default function Home() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('/api/data');
+                const response = await axios.get(${import.meta.env.VITE_BACKEND_HOST}+'/api/data');
                 setDrivers(response.data.drivers || []);
                 setGivers(response.data.givers || []);
             } catch (error) {

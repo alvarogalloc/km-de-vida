@@ -8,7 +8,7 @@ const Login = () => {
 
     const handleSuccess = async (credentialResponse) => {
         try {
-            const res = await axios.post('/api/auth/google', {
+            const res = await axios.post(${import.meta.env.VITE_BACKEND_HOST}+'/api/auth/google', {
                 token: credentialResponse.credential,
             });
             console.log('Login Success:', res.data);
