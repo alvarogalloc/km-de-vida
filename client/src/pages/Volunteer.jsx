@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 
 export default function Volunteer() {
-    // form state
     const [formData, setFormData] = useState({
         volunteerName: '',
         volunteerEmail: '',
@@ -12,26 +10,35 @@ export default function Volunteer() {
     });
     const [status, setStatus] = useState({ type: '', message: '' });
 
-    // update form data on change
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setStatus({ type: 'loading', message: 'Enviando...' });
+        setStatus({ type: 'loading', message: '' });
 
+        // Simulación de envío
         try {
-            // send to backend
-            const response = await axios.post('/join/driver', formData);
-            setStatus({ type: 'success', message: response.data.message });
-            // clear form on success
-            setFormData({ volunteerName: '', volunteerEmail: '', volunteerPhone: '', availability: '' });
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            setStatus({
+                type: 'success',
+                message: '¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.'
+            });
+            setFormData({
+                volunteerName: '',
+                volunteerEmail: '',
+                volunteerPhone: '',
+                availability: ''
+            });
         } catch (error) {
-            // handle errors nicely
             setStatus({
                 type: 'error',
-                message: error.response?.data?.message || 'Hubo un error al enviar el formulario.'
+                message: 'Hubo un error al enviar el formulario. Por favor intenta de nuevo.'
             });
         }
     };

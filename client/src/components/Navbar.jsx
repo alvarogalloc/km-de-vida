@@ -2,12 +2,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import logo from '/images/logo.svg';
 import Login from './Login';
+import { useUser } from '../context/UserContext';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
     const isHome = location.pathname === '/';
+    const { user, logout } = useUser();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -64,7 +66,21 @@ export default function Navbar() {
                         <Link to="/donate" className="bg-secondary text-white px-5 py-2 rounded-full font-medium hover:bg-white hover:text-secondary transition-all shadow-md">
                             Donar Alimentos
                         </Link>
-                        <Login />
+
+                        {user ? (
+                            <div className="relative group">
+                                <button className="flex items-center space-x-2 focus:outline-none">
+                                    <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full border-2 border-secondary" />
+                                    <span className={`font-medium ${isScrolledState ? 'text-text-main' : 'text-white'}`}>{user.name.split(' ')[0]}</span>
+                                </button>
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi Perfil</Link>
+                                    <button onClick={logout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cerrar Sesión</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <Login />
+                        )}
                     </div>
                 </div>
 
@@ -83,8 +99,15 @@ export default function Navbar() {
                         <Link to="/donate" className="block py-3 text-secondary font-bold" onClick={() => setIsOpen(false)}>
                             Donar Alimentos
                         </Link>
-                        <div className="py-3 flex justify-center">
-                            <Login />
+                        <div className="py-3 flex justify-center flex-col items-center">
+                            {user ? (
+                                <>
+                                    <Link to="/profile" className="block py-2 text-text-main font-medium" onClick={() => setIsOpen(false)}>Mi Perfil</Link>
+                                    <button onClick={() => { logout(); setIsOpen(false); }} className="block py-2 text-red-500 font-medium">Cerrar Sesión</button>
+                                </>
+                            ) : (
+                                <Login />
+                            )}
                         </div>
                     </div>
                 )}

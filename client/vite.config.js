@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5173',
-      '/join': 'http://localhost:5173',
+      '/api': 'http://localhost:5050',
+      '/join': 'http://localhost:5050',
     }
   }
 })

@@ -2,14 +2,18 @@ import express from 'express'
 import { dirname, join } from 'path'
 import { config } from 'dotenv'
 import { fileURLToPath } from 'url';
-import { MongoClient, ServerApiVersion } from "mongodb"
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb"
 import bodyParser from 'body-parser'
+import { OAuth2Client } from 'google-auth-library'
+import cors from 'cors'
 
 config();
 
 const app = express()
 const port = process.env.PORT || 5050
 const db_uri = process.env.ATLAS_URI || '' // make sure to set this in .env!!
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 const client = new MongoClient(db_uri,
   {
@@ -24,16 +28,50 @@ const client = new MongoClient(db_uri,
 let db;
 let drivers;
 let givers;
+let users;
+let useMockData = false;
+
+// Mock data for demo purposes
+const mockDrivers = [];
+const mockGivers = [
+  {
+    _id: "1",
+    orgName: "Panadería La Esperanza",
+    contactPerson: "Juan Pérez",
+    donorEmail: "juan@esperanza.com",
+    donorPhone: "5512345678",
+    foodType: "Pan dulce y bolillos del día",
+    pickupTime: "Lunes a Viernes, 8pm",
+    address: "Av. Vallarta 2440, Arcos Vallarta, Guadalajara, Jal.",
+    createdAt: new Date().toISOString()
+  },
+  {
+    _id: "2",
+    orgName: "Mercado de Abastos",
+    contactPerson: "María González",
+    donorEmail: "maria@abastos.com",
+    donorPhone: "3312345678",
+    foodType: "Frutas y verduras de temporada",
+    pickupTime: "Martes y Jueves, 7am",
+    address: "Av. Mandarina, Comercial Abastos, Guadalajara, Jal.",
+    createdAt: new Date().toISOString()
+  }
+];
+const mockUsers = [];
+
 async function connectDB() {
   try {
     await client.connect();
     db = client.db(process.env.DB_NAME);
     drivers = db.collection("drivers");
     givers = db.collection("givers");
+    users = db.collection("users");
     console.log("✅ Connected to MongoDB");
   } catch (err) {
-    console.error("❌ MongoDB connection failed:", err);
-    process.exit(1);
+    console.warn("⚠️  MongoDB connection failed, using MOCK DATA for demo");
+    console.warn("   To use real database, update ATLAS_URI in .env file");
+    useMockData = true;
+    // Don't exit, continue with mock data
   }
 }
 
@@ -41,8 +79,10 @@ async function connectDB() {
 // so when we press ctrl+c it actually quits
 // TODO: maybe handle other signals too?
 process.on('SIGINT', async () => {
-  await client.close();
-  console.log('MongoDB connection closed');
+  if (!useMockData) {
+    await client.close();
+    console.log('MongoDB connection closed');
+  }
   process.exit(0);
 });
 
@@ -55,16 +95,58 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json()); // Add JSON body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
+app.use(cors()); // Enable CORS for all routes
+
 
 // here are the api endpoints
 // simple get for data
 app.get('/api/data', async (req, res) => {
   try {
-    const all_drivers = await drivers.find({}).toArray();
-    const all_givers = await givers.find({}).toArray();
-    res.json({ drivers: all_drivers, givers: all_givers });
+    if (useMockData) {
+      res.json({ drivers: mockDrivers, givers: mockGivers });
+    } else {
+      const all_drivers = await drivers.find({}).toArray();
+      const all_givers = await givers.find({}).toArray();
+      res.json({ drivers: all_drivers, givers: all_givers });
+    }
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
+app.post('/api/auth/google', async (req, res) => {
+  const { token } = req.body;
+
+  if (useMockData) {
+    // In mock mode, create a fake user
+    const mockUser = {
+      _id: "mock-user-1",
+      email: "demo@kmdevida.com",
+      name: "Demo User",
+      picture: "https://via.placeholder.com/150",
+      lastLogin: new Date()
+    };
+    return res.status(200).json({ user: mockUser, message: 'Login successful (DEMO MODE)' });
+  }
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    const user = await users.findOneAndUpdate(
+      { email },
+      { $set: { name, picture, lastLogin: new Date() } },
+      { upsert: true, returnDocument: 'after' }
+    );
+
+    res.status(200).json({ user, message: 'Login successful' });
+  } catch (error) {
+    console.error('Google Auth Error:', error);
+    res.status(401).json({ error: 'Invalid token' });
   }
 });
 
@@ -110,6 +192,8 @@ function validate_giver(data) {
   if (!data.pickupTime || data.pickupTime.trim().length < 3)
     errors.push("Preferred pickup time is required.");
 
+  if (!data.address || data.address.trim().length < 5)
+    errors.push("Address is required.");
   return errors;
 }
 
@@ -134,6 +218,8 @@ app.post('/join/giver', async (req, res) => {
       donorPhone: data.donorPhone.trim(),
       foodType: data.foodType.trim(),
       pickupTime: data.pickupTime.trim(),
+      address: data.address.trim(),
+      userId: data.userId || null, // Link to user if logged in
       createdAt: new Date().toISOString()
     };
 
@@ -182,6 +268,7 @@ app.post('/join/driver', async (req, res) => {
       volunteerEmail: data.volunteerEmail.trim(),
       volunteerPhone: data.volunteerPhone.trim(),
       availability: data.availability.trim(),
+      userId: data.userId || null, // Link to user if logged in
       createdAt: new Date().toISOString()
     };
 
@@ -198,6 +285,82 @@ app.post('/join/driver', async (req, res) => {
       status: "error",
       message: "Something went wrong while saving your information. Please try again later."
     });
+  }
+});
+
+// --- Capstone CRUD Endpoints ---
+
+// Get donations for a specific user (by email or userId)
+app.get('/api/my-donations', async (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ error: "Email required" });
+
+  try {
+    const myGivers = await givers.find({ donorEmail: email }).toArray();
+    res.json(myGivers);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch donations" });
+  }
+});
+
+// Get volunteer shifts for a specific user
+app.get('/api/my-volunteer-shifts', async (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ error: "Email required" });
+
+  try {
+    const myShifts = await drivers.find({ volunteerEmail: email }).toArray();
+    res.json(myShifts);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch volunteer shifts" });
+  }
+});
+
+// Delete a donation
+app.delete('/api/donations/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await givers.deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Donation not found" });
+    }
+    res.json({ message: "Donation deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete donation" });
+  }
+});
+
+// Update a donation
+app.put('/api/donations/:id', async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  // Basic validation (can reuse validate_giver if needed, but might be partial update)
+  if (!data.orgName || !data.foodType) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    const result = await givers.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          orgName: data.orgName,
+          contactPerson: data.contactPerson,
+          donorPhone: data.donorPhone,
+          foodType: data.foodType,
+          pickupTime: data.pickupTime,
+          address: data.address
+        }
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "Donation not found" });
+    }
+    res.json({ message: "Donation updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update donation" });
   }
 });
 
