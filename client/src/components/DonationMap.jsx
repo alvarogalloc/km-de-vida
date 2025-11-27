@@ -18,7 +18,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const DonationMap = ({ donations }) => {
     const [markers, setMarkers] = useState([]);
-    const center = [20.6597, -103.3496]; // Mexico City
+    const center = [20.6597, -103.3496]; // GDL
 
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
