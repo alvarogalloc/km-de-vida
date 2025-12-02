@@ -66,7 +66,7 @@ async function connectDB() {
     users = db.collection("users");
     console.log("✅ Connected to MongoDB");
   } catch (err) {
-    console.warn("⚠️  MongoDB connection failed, using MOCK DATA for demo");
+    console.warn(" MongoDB connection failed"+err+", using MOCK DATA for demo");
     console.warn("   To use real database, update ATLAS_URI in .env file");
     useMockData = true;
     // Don't exit, continue with mock data
@@ -75,7 +75,6 @@ async function connectDB() {
 
 // mongo keeps running if we don't stop it here
 // so when we press ctrl+c it actually quits
-// TODO: maybe handle other signals too?
 process.on('SIGINT', async () => {
   if (!useMockData) {
     await client.close();
@@ -178,10 +177,10 @@ app.post('/join/giver', async (req, res) => {
   }
 
   try {
-    const existing = await givers.findOne({ donorEmail: data.donorEmail.trim() });
-    if (existing) {
-      return res.status(409).json({ status: "error", message: "A donor is already registered with this email." });
-    }
+    // const existing = await givers.findOne({ donorEmail: data.donorEmail.trim() });
+    // if (existing) {
+    //   return res.status(409).json({ status: "error", message: "A donor is already registered with this email." });
+    // }
 
     const newGiver = {
       orgName: data.orgName.trim(),
