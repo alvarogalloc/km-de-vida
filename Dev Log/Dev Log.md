@@ -148,15 +148,6 @@
 
 ---
 
-### Team - Testing & Documentation
-- All three of us tested the live site together
-- Fixed minor bugs found during testing
-- **Álvaro**: Wrote ARCHITECTURE.md with system diagrams
-- **Regina**: Created DESIGN_DOC.md with UI/UX decisions
-- **Daniela**: Updated README.md with setup instructions
-- **AI Assist**: Used ChatGPT to help structure the README - prompt: "Generate a professional README template for a MERN stack food donation app with sections for setup, features, and tech stack"
-- Recorded demo video of the application
-
 ### Final Team Review
 - Tested full user flow: Sign up → Create donation → View on map → Edit → Delete
 - Verified mobile responsiveness
@@ -181,7 +172,7 @@
 
 ### Deployment
 - **Problem**: Render was slow and kept crashing
-- **Solution**: Moved frontend to Vercel, optimized backend for Render
+- **Solution**: Moved frontend to Vercel
 
 ### Form Handling
 - **Problem**: Forms not resetting after submission
@@ -197,29 +188,6 @@
 
 ---
 
-## Team Contributions
-
-### Álvaro Gallo Cruz
-- Backend architecture and API design
-- MongoDB database setup and schema
-- Server deployment and optimization
-- API documentation
-
-### Regina Beltrán López
-- UI/UX design and wireframes
-- Frontend components and animations
-- Responsive design implementation
-- Accessibility improvements
-
-### Daniela Terán Martija
-- Google OAuth integration
-- Form development and validation
-- Map integration with geocoding
-- Frontend deployment to Vercel
-- Cross-team coordination
-
----
-
 ## What We Learned
 
 ### Technical Skills
@@ -230,23 +198,13 @@
 - Responsive web design
 - Deployment and DevOps basics
 
-### Soft Skills
-- Pair programming is great for complex features
-- Daily standups keep everyone aligned
-- Documentation saves time in the long run
-- Testing early catches bugs faster
-- Real-world constraints (cost, time) force creative solutions
-
 ### What Worked Well
 - Dividing work by expertise (backend/frontend/design)
 - Using free tiers of services to avoid costs
 - Frequent communication via group chat
-- Testing on real devices, not just desktop
 
 ### What We'd Do Differently
 - Start with mobile-first design
-- Set up automated tests from day one
-- Research deployment options earlier
 - Add more user feedback mechanisms
 - Plan for scalability from the beginning
 
@@ -255,12 +213,3 @@
 ## Impact & Future Vision
 
 This project demonstrates a real solution to food waste in our community. With proper adoption, it could connect dozens of restaurants with volunteer drivers to feed families in need.
-
-### Next Steps (If We Had More Time)
-1. Push notifications for nearby donations
-2. Route optimization for drivers
-3. Admin dashboard for monitoring
-4. Native mobile apps
-5. Impact analytics (meals saved, CO2 reduced)
-
-**Built with care to reduce food waste and fight hunger.**
