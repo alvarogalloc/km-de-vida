@@ -28,7 +28,6 @@ const Login = () => {
             <GoogleLogin
                 onSuccess={handleSuccess}
                 onError={handleError}
-                useOneTap
                 type="icon"
                 shape="circle"
             />

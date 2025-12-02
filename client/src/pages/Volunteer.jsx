@@ -1,46 +1,103 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useUser } from '../context/UserContext';
+import axios from 'axios';
 
 export default function Volunteer() {
-    const [formData, setFormData] = useState({
-        volunteerName: '',
-        volunteerEmail: '',
-        volunteerPhone: '',
-        availability: ''
-    });
+    const { user } = useUser();
+    const [donations, setDonations] = useState([]);
+    const [myShifts, setMyShifts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState({ type: '', message: '' });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    useEffect(() => {
+        fetchDonations();
+        if (user) {
+            fetchMyShifts();
+        }
+    }, [user]);
+
+    const fetchDonations = async () => {
+        try {
+            const response = await axios.get('/api/data');
+            setDonations(response.data.givers || []);
+        } catch (error) {
+            console.error("Error fetching donations:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setStatus({ type: 'loading', message: '' });
-
-        // Simulación de envío
+    const fetchMyShifts = async () => {
+        if (!user) return;
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const response = await axios.get(`/api/my-assigned-shifts?email=${user.email}`);
+            setMyShifts(response.data);
+        } catch (error) {
+            console.error("Error fetching my shifts:", error);
+        }
+    };
+
+    const handleAssignShift = async (donationId) => {
+        if (!user) {
+            setStatus({
+                type: 'error',
+                message: 'Debes iniciar sesión para asignarte a un turno.'
+            });
+            return;
+        }
+
+        try {
+            await axios.post('/api/shifts/assign', {
+                donationId: donationId,
+                volunteerEmail: user.email,
+                volunteerName: user.name
+            });
+
             setStatus({
                 type: 'success',
-                message: '¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.'
+                message: '¡Turno asignado exitosamente!'
             });
-            setFormData({
-                volunteerName: '',
-                volunteerEmail: '',
-                volunteerPhone: '',
-                availability: ''
-            });
+
+            // Refresh the shifts
+            fetchMyShifts();
+            fetchDonations();
         } catch (error) {
             setStatus({
                 type: 'error',
-                message: 'Hubo un error al enviar el formulario. Por favor intenta de nuevo.'
+                message: error.response?.data?.error || 'Error al asignar el turno.'
             });
         }
+    };
+
+    const handleUnassignShift = async (donationId) => {
+        if (!user) return;
+
+        if (!confirm("¿Estás seguro de que quieres cancelar este turno?")) return;
+
+        try {
+            await axios.delete(`/api/shifts/unassign/${donationId}`, {
+                data: { volunteerEmail: user.email }
+            });
+
+            setStatus({
+                type: 'success',
+                message: 'Turno cancelado exitosamente.'
+            });
+
+            // Refresh the shifts
+            fetchMyShifts();
+            fetchDonations();
+        } catch (error) {
+            setStatus({
+                type: 'error',
+                message: 'Error al cancelar el turno.'
+            });
+        }
+    };
+
+    const isAssignedToShift = (donationId) => {
+        return myShifts.some(shift => shift._id === donationId);
     };
 
     return (
@@ -50,102 +107,156 @@ export default function Volunteer() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="max-w-2xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100"
+                    className="max-w-5xl mx-auto"
                 >
-                    <h1 className="text-3xl md:text-4xl font-bold text-primary font-serif mb-6 text-center">
-                        Únete como Voluntario
-                    </h1>
-                    <p className="text-text-muted text-center mb-10 text-lg">
-                        Tu tiempo puede cambiar vidas. Ayúdanos a transportar alimentos y esperanza.
-                    </p>
+                    <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-primary font-serif mb-6 text-center">
+                            Únete como Voluntario
+                        </h1>
+                        <p className="text-text-muted text-center mb-6 text-lg">
+                            Tu tiempo puede cambiar vidas. Selecciona los turnos de recolección que mejor se ajusten a tu horario.
+                        </p>
 
-                    {status.message && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            className={`p-4 rounded-lg mb-8 text-center ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
-                                status.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+                        {!user && (
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-center">
+                                <p className="text-yellow-800 font-medium">
+                                    Inicia sesión para poder asignarte a turnos específicos
+                                </p>
+                            </div>
+                        )}
+
+                        {status.message && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                className={`p-4 rounded-lg mb-6 text-center ${
+                                    status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+                                    status.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
                                     'bg-blue-50 text-blue-700 border border-blue-200'
                                 }`}
-                        >
-                            {status.message}
-                        </motion.div>
+                            >
+                                {status.message}
+                            </motion.div>
+                        )}
+                    </div>
+
+                    {/* My Assigned Shifts Section */}
+                    {user && myShifts.length > 0 && (
+                        <div className="mb-8">
+                            <h2 className="text-2xl font-bold text-primary font-serif mb-4">Mis Turnos Asignados</h2>
+                            <div className="grid gap-4">
+                                {myShifts.map(shift => (
+                                    <motion.div
+                                        key={shift._id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="bg-green-50 border border-green-200 p-6 rounded-xl"
+                                    >
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <h3 className="text-xl font-bold text-green-900">{shift.orgName}</h3>
+                                                    <span className="bg-green-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded">
+                                                        Asignado
+                                                    </span>
+                                                </div>
+                                                <p className="text-green-800"><strong>Tipo de alimento:</strong> {shift.foodType}</p>
+                                                <p className="text-green-800"><strong>Horario de recolección:</strong> {shift.pickupTime}</p>
+                                                <p className="text-green-800"><strong>Dirección:</strong> {shift.address}</p>
+                                                <p className="text-green-700 text-sm mt-2">
+                                                    <strong>Contacto:</strong> {shift.contactPerson} - {shift.donorPhone}
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={() => handleUnassignShift(shift._id)}
+                                                className="ml-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
+                                            >
+                                                Cancelar Turno
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="volunteerName">
-                                Nombre Completo
-                            </label>
-                            <input
-                                type="text"
-                                id="volunteerName"
-                                name="volunteerName"
-                                value={formData.volunteerName}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                required
-                            />
-                        </div>
+                    {/* Available Donations Section */}
+                    <div>
+                        <h2 className="text-2xl font-bold text-primary font-serif mb-4">
+                            Donaciones Disponibles para Recolección
+                        </h2>
 
-                        <div>
-                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="volunteerEmail">
-                                Correo Electrónico
-                            </label>
-                            <input
-                                type="email"
-                                id="volunteerEmail"
-                                name="volunteerEmail"
-                                value={formData.volunteerEmail}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                required
-                            />
-                        </div>
+                        {loading ? (
+                            <p className="text-center py-8">Cargando donaciones...</p>
+                        ) : donations.length === 0 ? (
+                            <div className="text-center py-8 bg-white rounded-xl border border-dashed border-gray-300">
+                                <p className="text-text-muted">No hay donaciones disponibles en este momento.</p>
+                            </div>
+                        ) : (
+                            <div className="grid gap-6">
+                                {donations.map(donation => {
+                                    const isAssigned = isAssignedToShift(donation._id);
+                                    const volunteerCount = donation.assignedVolunteers?.length || 0;
 
-                        <div>
-                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="volunteerPhone">
-                                Teléfono
-                            </label>
-                            <input
-                                type="tel"
-                                id="volunteerPhone"
-                                name="volunteerPhone"
-                                value={formData.volunteerPhone}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-text-muted text-sm font-bold mb-2" htmlFor="availability">
-                                Disponibilidad
-                            </label>
-                            <select
-                                id="availability"
-                                name="availability"
-                                value={formData.availability}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-white"
-                                required
-                            >
-                                <option value="">Selecciona una opción</option>
-                                <option value="weekday_mornings">Mañanas entre semana</option>
-                                <option value="weekday_afternoons">Tardes entre semana</option>
-                                <option value="weekends">Fines de semana</option>
-                                <option value="flexible">Flexible</option>
-                            </select>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={status.type === 'loading'}
-                            className="w-full bg-secondary text-white font-bold py-4 rounded-lg hover:bg-primary transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-                        >
-                            {status.type === 'loading' ? 'Enviando...' : 'Registrarme'}
-                        </button>
-                    </form>
+                                    return (
+                                        <motion.div
+                                            key={donation._id}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className={`p-6 rounded-xl shadow-sm border transition-all ${
+                                                isAssigned
+                                                    ? 'bg-green-50 border-green-200'
+                                                    : 'bg-white border-gray-100 hover:shadow-md'
+                                            }`}
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <h3 className="text-xl font-bold text-primary">{donation.orgName}</h3>
+                                                        {volunteerCount > 0 && (
+                                                            <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                                                                {volunteerCount} voluntario{volunteerCount !== 1 ? 's' : ''}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-text-muted mt-1">
+                                                        <strong>Tipo de alimento:</strong> {donation.foodType}
+                                                    </p>
+                                                    <p className="text-text-muted">
+                                                        <strong>Horario de recolección:</strong> {donation.pickupTime}
+                                                    </p>
+                                                    <p className="text-text-muted">
+                                                        <strong>Dirección:</strong> {donation.address}
+                                                    </p>
+                                                    <p className="text-text-muted text-sm mt-2">
+                                                        <strong>Contacto:</strong> {donation.contactPerson}
+                                                    </p>
+                                                </div>
+                                                <div className="ml-4">
+                                                    {isAssigned ? (
+                                                        <button
+                                                            onClick={() => handleUnassignShift(donation._id)}
+                                                            className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium"
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => handleAssignShift(donation._id)}
+                                                            disabled={!user}
+                                                            className="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-primary transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                            {user ? 'Asignarme' : 'Inicia sesión'}
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
                 </motion.div>
             </div>
         </div>
