@@ -1,7 +1,5 @@
 import express from 'express'
-import { dirname, join } from 'path'
 import { config } from 'dotenv'
-import { fileURLToPath } from 'url';
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb"
 import bodyParser from 'body-parser'
 import { OAuth2Client } from 'google-auth-library'
@@ -88,13 +86,9 @@ process.on('SIGINT', async () => {
 
 await connectDB();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json()); // Add JSON body parser
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(join(__dirname, 'public')));
 app.use(cors()); // Enable CORS for all routes
 
 
@@ -150,28 +144,6 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
-app.get('/', async (req, res) => {
-  // grab everyone from the db
-  const all_drivers = await drivers.find({}).toArray()
-  const all_givers = await givers.find({}).toArray()
-
-
-  // check if we need to show a message
-  const { status, message } = req.query;
-  const notification = status && message ? { status, message } : null;
-
-  // render the index page with all the data
-  res.render("index", { drivers: all_drivers, givers: all_givers, notification })
-})
-app.get('/about', (_, res) => {
-  res.render("about")
-})
-app.get('/volunteer', (_, res) => {
-  res.render("volunteer")
-})
-app.get('/contact', (_, res) => {
-  res.render("contact")
-})
 
 
 // helper to validate giver data
@@ -361,6 +333,94 @@ app.put('/api/donations/:id', async (req, res) => {
     res.json({ message: "Donation updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "Failed to update donation" });
+  }
+});
+
+// Assign volunteer to a specific donation shift
+app.post('/api/shifts/assign', async (req, res) => {
+  const { donationId, volunteerEmail, volunteerName } = req.body;
+
+  if (!donationId || !volunteerEmail || !volunteerName) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    // Check if donation exists
+    const donation = await givers.findOne({ _id: new ObjectId(donationId) });
+    if (!donation) {
+      return res.status(404).json({ error: "Donation not found" });
+    }
+
+    // Check if volunteer is already assigned to this donation
+    const volunteers = donation.assignedVolunteers || [];
+    const alreadyAssigned = volunteers.some(v => v.email === volunteerEmail);
+
+    if (alreadyAssigned) {
+      return res.status(409).json({ error: "Ya estás asignado a este turno" });
+    }
+
+    // Add volunteer to the donation's assignedVolunteers array
+    await givers.updateOne(
+      { _id: new ObjectId(donationId) },
+      {
+        $push: {
+          assignedVolunteers: {
+            email: volunteerEmail,
+            name: volunteerName,
+            assignedAt: new Date().toISOString()
+          }
+        }
+      }
+    );
+
+    res.status(200).json({ message: "Turno asignado exitosamente" });
+  } catch (error) {
+    console.error("Error assigning shift:", error);
+    res.status(500).json({ error: "Failed to assign shift" });
+  }
+});
+
+// Unassign volunteer from a donation shift
+app.delete('/api/shifts/unassign/:donationId', async (req, res) => {
+  const { donationId } = req.params;
+  const { volunteerEmail } = req.body;
+
+  if (!volunteerEmail) {
+    return res.status(400).json({ error: "Volunteer email required" });
+  }
+
+  try {
+    await givers.updateOne(
+      { _id: new ObjectId(donationId) },
+      {
+        $pull: {
+          assignedVolunteers: { email: volunteerEmail }
+        }
+      }
+    );
+
+    res.status(200).json({ message: "Turno desasignado exitosamente" });
+  } catch (error) {
+    console.error("Error unassigning shift:", error);
+    res.status(500).json({ error: "Failed to unassign shift" });
+  }
+});
+
+// Get volunteer's assigned shifts
+app.get('/api/my-assigned-shifts', async (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ error: "Email required" });
+
+  try {
+    // Find all donations where this volunteer is assigned
+    const assignedShifts = await givers.find({
+      'assignedVolunteers.email': email
+    }).toArray();
+
+    res.json(assignedShifts);
+  } catch (error) {
+    console.error("Error fetching assigned shifts:", error);
+    res.status(500).json({ error: "Failed to fetch assigned shifts" });
   }
 });
 
