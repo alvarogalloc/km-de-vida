@@ -23,9 +23,9 @@ export default function Profile() {
     const fetchData = async () => {
         try {
             const [donationsRes, shiftsRes, assignedShiftsRes] = await Promise.all([
-                axios.get(`/api/my-donations?email=${user.email}`),
-                axios.get(`/api/my-volunteer-shifts?email=${user.email}`),
-                axios.get(`/api/my-assigned-shifts?email=${user.email}`)
+                axios.get(import.meta.env.VITE_BACKEND_HOST + `/api/my-donations?email=${user.email}`),
+                axios.get(import.meta.env.VITE_BACKEND_HOST + `/api/my-volunteer-shifts?email=${user.email}`),
+                axios.get(import.meta.env.VITE_BACKEND_HOST + `/api/my-assigned-shifts?email=${user.email}`)
             ]);
             setDonations(donationsRes.data);
             setShifts(shiftsRes.data);
@@ -94,7 +94,7 @@ export default function Profile() {
         if (!confirm("¿Estás seguro de que quieres cancelar este turno?")) return;
 
         try {
-            await axios.delete(`/api/shifts/unassign/${donationId}`, {
+            await axios.delete(import.meta.env.VITE_BACKEND_HOST + `/api/shifts/unassign/${donationId}`, {
                 data: { volunteerEmail: user.email }
             });
             // Refresh data
@@ -115,7 +115,15 @@ export default function Profile() {
                         animate={{ opacity: 1, y: 0 }}
                         className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-8 flex items-center space-x-6"
                     >
-                        <img src={user.picture} alt={user.name} className="w-24 h-24 rounded-full border-4 border-secondary/20" />
+                        <img
+                            src={user.picture}
+                            alt={user.name}
+                            className="w-24 h-24 rounded-full border-4 border-secondary/20 object-cover"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=4A5D23&color=fff&size=96`;
+                            }}
+                        />
                         <div>
                             <h1 className="text-3xl font-bold text-primary font-serif">{user.name}</h1>
                             <p className="text-text-muted">{user.email}</p>
@@ -215,27 +223,6 @@ export default function Profile() {
                             </div>
                         )}
                     </div>
-
-                    {/* General Volunteer Registration (if exists) */}
-                    {shifts.length > 0 && (
-                        <div>
-                            <h2 className="text-2xl font-bold text-primary font-serif mb-6">Registro General de Voluntariado</h2>
-                            <div className="grid gap-6">
-                                {shifts.map(shift => (
-                                    <motion.div key={shift._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <h3 className="text-xl font-bold text-primary">Conductor Voluntario</h3>
-                                                <p className="text-text-muted mt-1"><strong>Disponibilidad:</strong> {shift.availability}</p>
-                                                <p className="text-text-muted"><strong>Teléfono:</strong> {shift.volunteerPhone}</p>
-                                                <p className="text-xs text-gray-400 mt-2">Registrado el: {new Date(shift.createdAt).toLocaleDateString()}</p>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
 
                 </div>
             </div>

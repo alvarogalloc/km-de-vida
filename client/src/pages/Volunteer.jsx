@@ -19,7 +19,7 @@ export default function Volunteer() {
 
     const fetchDonations = async () => {
         try {
-            const response = await axios.get('/api/data');
+            const response = await axios.get(import.meta.env.VITE_BACKEND_HOST + '/api/data');
             setDonations(response.data.givers || []);
         } catch (error) {
             console.error("Error fetching donations:", error);
@@ -31,7 +31,7 @@ export default function Volunteer() {
     const fetchMyShifts = async () => {
         if (!user) return;
         try {
-            const response = await axios.get(`/api/my-assigned-shifts?email=${user.email}`);
+            const response = await axios.get(import.meta.env.VITE_BACKEND_HOST + `/api/my-assigned-shifts?email=${user.email}`);
             setMyShifts(response.data);
         } catch (error) {
             console.error("Error fetching my shifts:", error);
@@ -48,7 +48,7 @@ export default function Volunteer() {
         }
 
         try {
-            await axios.post('/api/shifts/assign', {
+            await axios.post(import.meta.env.VITE_BACKEND_HOST + '/api/shifts/assign', {
                 donationId: donationId,
                 volunteerEmail: user.email,
                 volunteerName: user.name
@@ -76,7 +76,7 @@ export default function Volunteer() {
         if (!confirm("¿Estás seguro de que quieres cancelar este turno?")) return;
 
         try {
-            await axios.delete(`/api/shifts/unassign/${donationId}`, {
+            await axios.delete(import.meta.env.VITE_BACKEND_HOST + `/api/shifts/unassign/${donationId}`, {
                 data: { volunteerEmail: user.email }
             });
 
