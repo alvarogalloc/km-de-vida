@@ -203,11 +203,6 @@
 - Using free tiers of services to avoid costs
 - Frequent communication via group chat
 
-### What We'd Do Differently
-- Start with mobile-first design
-- Add more user feedback mechanisms
-- Plan for scalability from the beginning
-
 ---
 
 ## Impact & Future Vision
