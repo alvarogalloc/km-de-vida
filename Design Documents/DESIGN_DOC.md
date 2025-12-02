@@ -5,11 +5,11 @@
 
 ## 2. Architecture
 The project follows the **MERN Stack** architecture:
--   **Frontend**: React (Vite), Tailwind CSS, Framer Motion.
+-   **Frontend**: React, Tailwind CSS, Framer Motion.
 -   **Backend**: Node.js, Express.js.
 -   **Database**: MongoDB (Atlas).
 -   **Authentication**: Google OAuth 2.0.
--   **Third-Party API**: Google Maps JavaScript API & Geocoding API.
+-   **Third-Party API**: Geocoding API.
 
 ## 3. Database Schema
 

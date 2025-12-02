@@ -158,39 +158,3 @@ flowchart TD
 4. **Registration**: Fills availability form
 5. **Confirmation**: Receives success message
 6. **Future**: (Could add) Receives notifications for nearby pickups
-
-## Key User Interactions
-
-### Homepage
-- **Scroll animations**: Smooth fade-ins as user scrolls
-- **Counter animations**: Numbers count up when in viewport
-- **Map interaction**: Click markers to see donation details
-- **CTA buttons**: Prominent calls-to-action
-
-### Forms
-- **Real-time validation**: Immediate feedback on input
-- **Loading states**: Button shows "Enviando..." during submission
-- **Success/Error messages**: Clear feedback after submission
-- **Auto-fill**: Google Auth pre-fills name and email
-
-### Profile Page
-- **Inline editing**: Click "Editar" to modify donation
-- **Confirmation dialogs**: "¿Estás seguro?" before deletion
-- **Empty states**: Helpful messages when no data
-- **Quick actions**: Edit/Delete buttons on each item
-
-## Accessibility Considerations
-
-1. **Keyboard Navigation**: All interactive elements accessible via Tab
-2. **Screen Readers**: Semantic HTML and ARIA labels
-3. **Color Contrast**: WCAG AA compliant color scheme
-4. **Form Labels**: All inputs have associated labels
-5. **Error Messages**: Clear, descriptive error text
-
-## Mobile Responsiveness
-
-1. **Touch Targets**: Minimum 44x44px for buttons
-2. **Responsive Grid**: Adapts from 1 to 2 columns
-3. **Mobile Menu**: Hamburger menu on small screens
-4. **Map Gestures**: Touch-friendly map controls
-5. **Form Layout**: Stacked inputs on mobile
