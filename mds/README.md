@@ -1,15 +1,10 @@
-# Kilometros de Vida 🚗🍽️
+# Kilometros de Vida 
 
 > Connecting food surplus with those in need through volunteer-driven logistics
 
 A full-stack MERN application that reduces food waste by connecting restaurants, markets, and food donors with volunteer drivers who distribute surplus food to communities in need.
 
-![MERN Stack](https://img.shields.io/badge/Stack-MERN-green)
-![React](https://img.shields.io/badge/React-19-blue)
-![Node](https://img.shields.io/badge/Node-25-green)
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen)
-
-## 📋 Table of Contents
+## Contents
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
@@ -20,26 +15,25 @@ A full-stack MERN application that reduces food waste by connecting restaurants,
 - [API Documentation](#api-documentation)
 - [Team](#team)
 
-## ✨ Features
-
+## Features
 ### For Donors
-- 📝 Register food donations with pickup details
-- 🗺️ See donation locations on interactive map
-- ✏️ Edit or delete donations from profile
-- 🔐 Secure Google OAuth authentication
+- Register food donations with pickup details
+- See donation locations on interactive map
+- Edit or delete donations from profile
+- Secure Google OAuth authentication
 
 ### For Volunteers
-- 🙋 Sign up as volunteer driver
-- 📅 Specify availability preferences
-- 👤 Manage volunteer profile
+- Sign up as volunteer driver
+- Specify availability preferences
+- Manage volunteer profile
 
 ### For Everyone
-- 📊 View real-time impact statistics
-- 🌍 Interactive map showing donation locations
-- 📱 Fully responsive mobile design
-- ♿ Accessible interface (WCAG AA)
+- View real-time impact statistics
+- Interactive map showing donation locations
+- Fully responsive mobile design
+- Accessible interface (WCAG AA)
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **React 19** - UI library
@@ -57,7 +51,7 @@ A full-stack MERN application that reduces food waste by connecting restaurants,
 - **Google OAuth 2.0** - Authentication
 - **Nominatim API** - Geocoding
 
-## 📦 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have:
 - **Node.js** (v18 or higher)
@@ -65,89 +59,141 @@ Before you begin, ensure you have:
 - **MongoDB Atlas account** (free tier works)
 - **Google Cloud Console account** (for OAuth)
 
-## 🚀 Installation
+## Prerequisites
 
-### 1. Clone the repository
+Before you begin, make sure you have installed:
+
+- **Node.js** (version 14 or higher)
+- **npm** (comes with Node.js)
+- A **MongoDB Atlas** account (free)
+- A **Google Cloud Console** account (for OAuth)
+
+---
+
+## Step-by-Step Setup
+
+### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/alvarogalloc/km-de-vida.git
 cd km-de-vida
 ```
 
-### 2. Install backend dependencies
+### 2. Set Up MongoDB Atlas
+
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a free account if you don't have one
+3. Create a new **Cluster** (select the free tier option)
+4. Go to **Database Access** and create a database user:
+   - Username: `your-username`
+   - Password: `your-secure-password`
+   - Permissions: **Read and write to any database**
+5. Go to **Network Access** and add your IP:
+   - Click **Add IP Address**
+   - Select **Allow Access from Anywhere** (0.0.0.0/0) for development
+6. Go to your cluster and click **Connect**
+7. Select **Connect your application**
+8. Copy the **connection string** (it will look like this):
+   ```
+   mongodb+srv://user:<pass>@cluster.mongodb.net/
+   ```
+9. Replace `<password>` with your actual password
+
+### 3. Set Up Google OAuth
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the **Google+ API**:
+   - Go to **APIs & Services** > **Library**
+   - Search for "Google+ API" and enable it
+4. Create OAuth 2.0 credentials:
+   - Go to **APIs & Services** > **Credentials**
+   - Click **Create Credentials** > **OAuth client ID**
+   - Application type: **Web application**
+   - Name: `Km de Vida Local`
+   - **Authorized JavaScript origins**:
+     - `http://localhost:5173`
+     - `http://localhost:5050`
+   - **Authorized redirect URIs**:
+     - `http://localhost:5173`
+   - Click **Create**
+5. Copy the **Client ID** and **Client Secret**
+
+### 4. Configure Environment Variables
+
+#### Backend (project root):
+
+1. Copy the template file:
+   ```bash
+   cp .env.template .env
+   ```
+
+2. Edit `.env` and add your credentials:
+   ```env
+   ATLAS_URI=yourmongoconnection
+   PORT=5050
+   DB_NAME=kmdevida
+   GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=your-client-secret
+   ```
+
+#### Frontend (`client` folder):
+
+1. Copy the template file:
+   ```bash
+   cd client
+   cp .env.template .env
+   ```
+
+2. Edit `client/.env` and add your Google Client ID:
+   ```env
+   VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+   ```
+
+   **IMPORTANT**: This must be the **same Client ID** used in the backend.
+
+### 5. Install Dependencies
+
+#### Backend:
 ```bash
 npm install
 ```
 
-### 3. Install frontend dependencies
+#### Frontend:
 ```bash
 cd client
 npm install
 cd ..
 ```
 
-## 🔐 Environment Variables
+### 6. (Optional) Seed the Database with Sample Data
 
-### Backend (.env in root directory)
+If you want to start with sample data:
 
-Create a `.env` file in the root directory:
-
-```env
-# MongoDB Atlas Connection String
-ATLAS_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority
-
-# Database Name
-DB_NAME=km-de-vida
-
-# Server Port
-PORT=5050
-
-# Google OAuth Client ID
-GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+```bash
+node seed.js
 ```
 
-**How to get MongoDB Atlas URI:**
-1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a free cluster
-3. Create a database user (Database Access)
-4. Whitelist your IP (Network Access)
-5. Click "Connect" → "Connect your application"
-6. Copy the connection string and replace `<password>`
+This will add 4 sample donations to your database.
 
-**How to get Google Client ID:**
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project
-3. Enable "Google+ API"
-4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client ID"
-5. Add authorized JavaScript origins: `http://localhost:5173`
-6. Copy the Client ID
+---
 
-### Frontend (client/.env)
+## Run the Application
 
-Create a `.env` file in the `client` directory:
+You need **TWO terminals** open:
 
-```env
-# Google OAuth Client ID (same as backend)
-VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-```
-
-## 🏃 Running the Application
-
-### Development Mode
-
-You need **two terminal windows**:
-
-**Terminal 1 - Backend Server:**
+### Terminal 1 - Backend:
 ```bash
 npm run dev
 ```
-Server runs on `http://localhost:5050`
+The backend server will be running at **http://localhost:5050**
 
-**Terminal 2 - Frontend Dev Server:**
+### Terminal 2 - Frontend:
 ```bash
 cd client
 npm run dev
 ```
-Frontend runs on `http://localhost:5173`
+The frontend will be running at **http://localhost:5173**
 
 ### Seeding Sample Data
 
@@ -168,31 +214,31 @@ npm run build
 
 Build output will be in `client/dist/`
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 km-de-vida/
-├── client/                 # Frontend React application
-│   ├── src/
-│   │   ├── components/    # Reusable components
-│   │   ├── context/       # React Context
-│   │   ├── pages/         # Page components
-│   │   ├── App.jsx        # Main app component
-│   │   ├── main.jsx       # Entry point
-│   │   └── index.css      # Global styles
-│   ├── public/            # Static assets
-│   └── vite.config.js     # Vite configuration
-├── middleware/            # Express middleware
-├── server.js             # Express server
-├── seed.js               # Database seeding script
-├── ARCHITECTURE.md       # System architecture docs
-├── WORKFLOW.md           # User workflow diagrams
-├── DESIGN_DOC.md         # Design documentation
-├── Dev Log.md            # Development log
-└── README.md             # This file
+|-- client/                 # Frontend React application
+|   |-- src/
+|   |   |-- components/    # Reusable components
+|   |   |-- context/       # React Context
+|   |   |-- pages/         # Page components
+|   |   |-- App.jsx        # Main app component
+|   |   |-- main.jsx       # Entry point
+|   |   |-- index.css      # Global styles
+|   |-- public/            # Static assets
+|   |-- vite.config.js     # Vite configuration
+|-- middleware/            # Express middleware
+|-- server.js             # Express server
+|-- seed.js               # Database seeding script
+|-- ARCHITECTURE.md       # System architecture docs
+|-- WORKFLOW.md           # User workflow diagrams
+|-- DESIGN_DOC.md         # Design documentation
+|-- Dev Log.md            # Development log
+|-- README.md             # This file
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication
 - `POST /api/auth/google` - Verify Google OAuth token
@@ -208,25 +254,23 @@ km-de-vida/
 - `POST /join/driver` - Register as volunteer
 - `GET /api/my-volunteer-shifts?email=<email>` - Get user's shifts
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed API documentation.
+See Architecture.pdf for detailed API documentation.
 
-## 👥 Team
-
+## Team
 **Regina Beltrán López** - Frontend Design & UX  
 **Daniela Terán Martija** - Full-Stack Integration & Deployment  
 **Álvaro Gallo Cruz** - Backend Architecture & Database
 
-## 📄 License
+## License
 
 This project is licensed under the ISC License.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **OpenStreetMap** for free geocoding via Nominatim
 - **Google** for OAuth authentication
 - **MongoDB** for database hosting
 - **Vite** for amazing developer experience
 
----
 
-**Built with ❤️ to reduce food waste and fight hunger**
+**Built with love to reduce food waste and fight hunger**

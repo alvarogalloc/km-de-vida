@@ -79,3 +79,17 @@ The project follows the **MERN Stack** architecture:
     -   **Solution**: Used Google Auth to get a verified email and linked records via that email/ID.
 -   **Challenge**: Visualizing data.
     -   **Solution**: Integrated Google Maps API to geocode addresses on the client-side and display markers, providing immediate visual feedback of the project's impact.
+-   **Challenge**: Making sure addresses are real and can be mapped.
+    -   **Solution**: Added Google's geocoding to check addresses automatically.
+-   **Challenge**: Working on phones and computers.
+    -   **Solution**: Used responsive design to adapt to any screen size.
+-   **Challenge**: Stopping duplicate registrations.
+    -   **Solution**: Check emails to prevent the same person signing up twice.
+-   **Challenge**: Keeping the site fast with lots of donations.
+    -   **Solution**: Only load donations in batches instead of all at once.
+-   **Challenge**: Hosting the website - Render kept crashing and was slow.
+    -   **Solution**: Switched to Vercel which handles the frontend much better.
+-   **Challenge**: Protecting user privacy on the public map.
+    -   **Solution**: Show location markers without exact addresses or personal info.
+-   **Challenge**: Connecting donors with drivers for pickup.
+    -   **Solution**: Share contact info only after driver registration for coordination.
